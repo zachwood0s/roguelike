@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84b63519d8374cf4a8c8feb1f45c2342, type: 3}
+  m_Name: InitialStats
+  m_EditorClassIdentifier: 
+  _abilityName: InitialStats
+  _numberOfUses: 0
+  _cost:
+    DurationStyle: 0
+    Duration: 0
+    Modifiers: []
+    GrantedTags: []
+    Period: 0
+  _cooldown:
+    DurationStyle: 0
+    Duration: 0
+    Modifiers: []
+    GrantedTags: []
+    Period: 0
+  _resultingEffect:
+    DurationStyle: 0
+    Duration: 0
+    Modifiers:
+    - Attribute: {fileID: 11400000, guid: ffeba476918b9344b92977fb1a343a95, type: 2}
+      ModifierOperation: 0
+      Value: 6
+    GrantedTags: []
+    Period: 0
