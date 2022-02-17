@@ -33,14 +33,26 @@ MonoBehaviour:
   - DurationStyle: 1
     Delay: 0
     Duration: 0.15
-    Modifiers: []
+    Modifiers:
+    - Attribute: {fileID: 11400000, guid: ffeba476918b9344b92977fb1a343a95, type: 2}
+      ModifierOperation: 1
+      Value: 1.1
     GrantedTags:
     - {fileID: 11400000, guid: aa868fcca2af07b4ca9212b040502f79, type: 2}
     Period: 0
   - DurationStyle: 1
     Delay: 0
-    Duration: 0.25
+    Duration: 0.3
     Modifiers: []
     GrantedTags:
     - {fileID: 11400000, guid: 7e9566b94d7a4ed44bc291e271253bb3, type: 2}
+    Period: 0
+  - DurationStyle: 1
+    Delay: 0.15
+    Duration: 1
+    Modifiers:
+    - Attribute: {fileID: 11400000, guid: ffeba476918b9344b92977fb1a343a95, type: 2}
+      ModifierOperation: 1
+      Value: -0.5
+    GrantedTags: []
     Period: 0

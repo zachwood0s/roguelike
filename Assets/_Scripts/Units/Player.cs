@@ -8,15 +8,18 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private AbilitySystemController _abilitySystem;
     [SerializeField] private AttributeSystemController _attributeSystem;
+    [SerializeField] private Animator _animator;
 
     private Rigidbody2D _rigidbody;
     private Vector2 _moveDirection;
     private Vector2 _dodgeDirection;
     private Vector2 _inputVec;
+    private SpriteRenderer _sprite;
 
     void Start()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
+        _sprite = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -31,12 +34,18 @@ public class Player : MonoBehaviour
         {
             _moveDirection = _inputVec;
         }
+        _sprite.flipX = _moveDirection.x < 0;
+
     }
 
     void FixedUpdate()
     {
         var speed = _attributeSystem.GetAttributeValue(AbilitySystemDB.Instance.MoveSpeed).CurrentValue;
-        _rigidbody.velocity = _moveDirection * speed;
+        var velDir = _moveDirection * speed;
+        _attributeSystem.SetAttributeBaseValue(
+            AbilitySystemDB.Instance.CurrentMoveSpeed, Mathf.Abs(velDir.magnitude));
+        _rigidbody.velocity = velDir;
+
     }
 
     protected void OnMove(InputValue input)
