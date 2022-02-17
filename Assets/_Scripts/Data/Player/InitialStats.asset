@@ -16,22 +16,25 @@ MonoBehaviour:
   _numberOfUses: 0
   _cost:
     DurationStyle: 0
+    Delay: 0
     Duration: 0
     Modifiers: []
     GrantedTags: []
     Period: 0
   _cooldown:
     DurationStyle: 0
+    Delay: 0
     Duration: 0
     Modifiers: []
     GrantedTags: []
     Period: 0
-  _resultingEffect:
-    DurationStyle: 0
+  _resultingEffects:
+  - DurationStyle: 0
+    Delay: 0
     Duration: 0
     Modifiers:
     - Attribute: {fileID: 11400000, guid: ffeba476918b9344b92977fb1a343a95, type: 2}
       ModifierOperation: 0
-      Value: 6
+      Value: 8
     GrantedTags: []
     Period: 0

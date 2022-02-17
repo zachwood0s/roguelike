@@ -7,6 +7,8 @@ namespace AbilitySystem
     [CreateAssetMenu(fileName = "Ability", menuName = "Ability System/Simple Ability")]
     public class SimpleAbility : AbstractAbility
     {
+        [SerializeField] private List<GameEffect> _resultingEffects;
+
         public override AbstractInstantiatedAbility InstantiateAbility(AbilitySystemController owner)
             => new SimpleInstantiatedAbility(this, owner);
 
@@ -20,7 +22,10 @@ namespace AbilitySystem
                 _owner.ApplyGameplayEffectToSelf(new InstantiatedGameEffect(_ability.Cooldown));
                 _owner.ApplyGameplayEffectToSelf(new InstantiatedGameEffect(_ability.Cost));
 
-                _owner.ApplyGameplayEffectToSelf(new InstantiatedGameEffect(_ability.ResultingEffect));
+                foreach (var r in (_ability as SimpleAbility)._resultingEffects)
+                {
+                    _owner.ApplyGameplayEffectToSelf(new InstantiatedGameEffect(r));
+                }
                 yield return null;
             }
         }

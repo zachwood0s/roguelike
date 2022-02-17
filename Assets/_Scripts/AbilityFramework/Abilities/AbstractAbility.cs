@@ -10,11 +10,9 @@ namespace AbilitySystem
         [SerializeField] protected int _numberOfUses;
         [SerializeField] protected GameEffect _cost;
         [SerializeField] protected GameEffect _cooldown;
-        [SerializeField] protected GameEffect _resultingEffect;
 
         public GameEffect Cooldown => _cooldown;
         public GameEffect Cost => _cost;
-        public GameEffect ResultingEffect => _resultingEffect;
 
         public abstract AbstractInstantiatedAbility InstantiateAbility(AbilitySystemController owner);
     }

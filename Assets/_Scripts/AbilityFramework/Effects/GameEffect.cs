@@ -9,6 +9,7 @@ namespace AbilitySystem
     public struct GameEffect
     {
         public DurationType DurationStyle;
+        public float Delay;
         public float Duration;
 
         public EffectModifier[] Modifiers;

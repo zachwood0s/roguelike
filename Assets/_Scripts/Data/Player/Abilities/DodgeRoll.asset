@@ -16,24 +16,31 @@ MonoBehaviour:
   _numberOfUses: 0
   _cost:
     DurationStyle: 0
+    Delay: 0
     Duration: 0
     Modifiers: []
     GrantedTags: []
     Period: 0
   _cooldown:
     DurationStyle: 1
-    Duration: 5
+    Delay: 0
+    Duration: 3
     Modifiers: []
     GrantedTags:
     - {fileID: 11400000, guid: 1489af1bde0036f47b174851d0949164, type: 2}
     Period: 0
-  _resultingEffect:
-    DurationStyle: 1
-    Duration: 0.5
-    Modifiers:
-    - Attribute: {fileID: 11400000, guid: ffeba476918b9344b92977fb1a343a95, type: 2}
-      ModifierOperation: 1
-      Value: 0.5
+  _resultingEffects:
+  - DurationStyle: 1
+    Delay: 0
+    Duration: 0.15
+    Modifiers: []
     GrantedTags:
     - {fileID: 11400000, guid: aa868fcca2af07b4ca9212b040502f79, type: 2}
+    Period: 0
+  - DurationStyle: 1
+    Delay: 0
+    Duration: 0.25
+    Modifiers: []
+    GrantedTags:
+    - {fileID: 11400000, guid: 7e9566b94d7a4ed44bc291e271253bb3, type: 2}
     Period: 0

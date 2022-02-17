@@ -7,6 +7,7 @@ namespace AbilitySystem
     public class InstantiatedGameEffect
     {
         public GameEffect GameEffect { get; private set; }
+        public float StartDelay { get; private set; }
         public float RemainingTime { get; private set; }
         public float TotalTime { get; private set; }
         public float Period { get; private set; }
@@ -15,6 +16,7 @@ namespace AbilitySystem
         public InstantiatedGameEffect(GameEffect effect)
         {
             GameEffect = effect;
+            StartDelay = effect.Delay;
             TotalTime = effect.Duration;
             RemainingTime = TotalTime;
             Period = effect.Period;

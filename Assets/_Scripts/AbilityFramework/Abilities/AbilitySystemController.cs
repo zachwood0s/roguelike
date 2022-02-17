@@ -30,15 +30,22 @@ namespace AbilitySystem
         {
             Debug.Assert(inst != null);
 
-            switch(inst.GameEffect.DurationStyle)
+            IEnumerator _Work()
             {
-                case DurationType.Instant:
-                    _ApplyInstantGameEffect(inst);
-                    break;
-                case DurationType.Timed:
-                    _ApplyTimedGameEffect(inst);
-                    break;
+                yield return new WaitForSeconds(inst.StartDelay);
+                switch (inst.GameEffect.DurationStyle)
+                {
+                    case DurationType.Instant:
+                        _ApplyInstantGameEffect(inst);
+                        break;
+                    case DurationType.Timed:
+                        _ApplyTimedGameEffect(inst);
+                        break;
+                }
+                yield return null;
             }
+
+            StartCoroutine(_Work());
         }
 
         private void _ActivateInitializationAbilities()

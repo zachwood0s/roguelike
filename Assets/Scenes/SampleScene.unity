@@ -533,6 +533,8 @@ MonoBehaviour:
   _dodgeTimeout: 3
   _afterDodgeSlowdownFactor: 0.5
   _afterDodgeSlowdownTimeout: 1
+  _dodgingFlag: {fileID: 11400000, guid: aa868fcca2af07b4ca9212b040502f79, type: 2}
+  _moveSpeedAttribute: {fileID: 11400000, guid: ffeba476918b9344b92977fb1a343a95, type: 2}
   _maxDodgeCount: 2
   _abilitySystem: {fileID: 715905537}
   _attributeSystem: {fileID: 715905536}
