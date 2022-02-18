@@ -25,7 +25,7 @@ namespace AbilitySystem
 
         public virtual bool CanActivateAbility()
         {
-            return !IsCooldownActive();
+            return HasCorrectTags() && !IsCooldownActive();
         }
 
         /// <summary>
@@ -46,6 +46,14 @@ namespace AbilitySystem
             }
             return false;
         }
+
+        // TODO: Make faster
+        protected bool HasAllTags(AbilitySystemController cont, GameTag[] tags)
+            => tags.All(x => cont.AppliedGameTags.Contains(x));
+        protected bool HasNoneTags(AbilitySystemController cont, GameTag[] tags)
+            => !tags.Any(x => cont.AppliedGameTags.Contains(x));
+
+        protected abstract bool HasCorrectTags();
 
         protected abstract IEnumerator ActivateAbility();
     }

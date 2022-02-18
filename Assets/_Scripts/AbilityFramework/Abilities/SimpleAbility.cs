@@ -28,6 +28,10 @@ namespace AbilitySystem
                 }
                 yield return null;
             }
+
+            protected override bool HasCorrectTags()
+                => HasAllTags(_owner, _ability.RequiredTags)
+                && HasNoneTags(_owner, _ability.BlockedTags);
         }
     }
 }

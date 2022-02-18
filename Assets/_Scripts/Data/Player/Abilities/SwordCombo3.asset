@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 84b63519d8374cf4a8c8feb1f45c2342, type: 3}
-  m_Name: DodgeRoll
+  m_Name: SwordCombo3
   m_EditorClassIdentifier: 
-  _abilityName: Dodge Roll
+  _abilityName: SwordCombo3
   _numberOfUses: 0
-  _requiredTags: []
+  _requiredTags:
+  - {fileID: 11400000, guid: 44af02b5d1b812841bf56e6ea299fb75, type: 2}
   _blockedTags:
-  - {fileID: 11400000, guid: 2da08b95c17073745995cdb46be8d76b, type: 2}
   - {fileID: 11400000, guid: b0df731a670bd674fbcebfc1d777471b, type: 2}
-  - {fileID: 11400000, guid: 7e8ede70efccd6d499294c0d0806372f, type: 2}
+  - {fileID: 11400000, guid: 2da08b95c17073745995cdb46be8d76b, type: 2}
   _cost:
     DurationStyle: 0
     Delay: 0
@@ -29,41 +29,34 @@ MonoBehaviour:
   _cooldown:
     DurationStyle: 1
     Delay: 0
-    Duration: 3
+    Duration: 2
     Modifiers: []
     GrantedTags:
-    - {fileID: 11400000, guid: 1489af1bde0036f47b174851d0949164, type: 2}
+    - {fileID: 11400000, guid: 0e4b40bd7ee4b1540b28001756fe3adc, type: 2}
     Period: 0
   _resultingEffects:
   - DurationStyle: 1
     Delay: 0
-    Duration: 0.15
+    Duration: 0.8
+    Modifiers: []
+    GrantedTags:
+    - {fileID: 11400000, guid: 7e8ede70efccd6d499294c0d0806372f, type: 2}
+    Period: 0
+  - DurationStyle: 1
+    Delay: 0.1
+    Duration: 0.6
     Modifiers:
     - Attribute: {fileID: 11400000, guid: ffeba476918b9344b92977fb1a343a95, type: 2}
       ModifierOperation: 1
-      Value: 1.1
+      Value: -0.9
     GrantedTags: []
     Period: 0
   - DurationStyle: 1
     Delay: 0
-    Duration: 0.3
-    Modifiers: []
-    GrantedTags:
-    - {fileID: 11400000, guid: 7e9566b94d7a4ed44bc291e271253bb3, type: 2}
-    Period: 0
-  - DurationStyle: 1
-    Delay: 0.15
-    Duration: 1
+    Duration: 0.1
     Modifiers:
     - Attribute: {fileID: 11400000, guid: ffeba476918b9344b92977fb1a343a95, type: 2}
       ModifierOperation: 1
-      Value: -0.5
+      Value: 1.3
     GrantedTags: []
-    Period: 0
-  - DurationStyle: 1
-    Delay: 0
-    Duration: 0.45
-    Modifiers: []
-    GrantedTags:
-    - {fileID: 11400000, guid: aa868fcca2af07b4ca9212b040502f79, type: 2}
     Period: 0

@@ -573,7 +573,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 4, y: 4}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 0
@@ -738,6 +738,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _abilities:
   - {fileID: 11400000, guid: 2e7f6aed65273d642b62b92ed4245a9c, type: 2}
+  - {fileID: 11400000, guid: 46414b42eca0fab46b5eba104bc88046, type: 2}
+  - {fileID: 11400000, guid: dcf522822e0163c41814838863bddd7e, type: 2}
+  - {fileID: 11400000, guid: 766405cfbe30cd8498299874f3f27ac6, type: 2}
   _initializationAbilities:
   - {fileID: 11400000, guid: 8c6e675697b57be498f6d7c9eb65730a, type: 2}
   _attributeSystem: {fileID: 715905536}
@@ -760,6 +763,12 @@ MonoBehaviour:
   _tagBoolMapping:
   - Tag: {fileID: 11400000, guid: aa868fcca2af07b4ca9212b040502f79, type: 2}
     Trigger: IsDodging
+  - Tag: {fileID: 11400000, guid: 2da08b95c17073745995cdb46be8d76b, type: 2}
+    Trigger: IsSwordCombo1
+  - Tag: {fileID: 11400000, guid: b0df731a670bd674fbcebfc1d777471b, type: 2}
+    Trigger: IsSwordCombo2
+  - Tag: {fileID: 11400000, guid: 7e8ede70efccd6d499294c0d0806372f, type: 2}
+    Trigger: IsSwordCombo3
   _attributeMapping:
   - Attribute: {fileID: 11400000, guid: 0d5d22af68fbb9641ad79ce1e42f5408, type: 2}
     FloatValue: CurrentMoveSpeed
@@ -1189,6 +1198,9 @@ MonoBehaviour:
   _dodgeRollCooldown: {fileID: 11400000, guid: 1489af1bde0036f47b174851d0949164, type: 2}
   _dodgeRollDodging: {fileID: 11400000, guid: aa868fcca2af07b4ca9212b040502f79, type: 2}
   _invunerable: {fileID: 11400000, guid: 7e9566b94d7a4ed44bc291e271253bb3, type: 2}
+  _swordAttack1Attacking: {fileID: 11400000, guid: 2da08b95c17073745995cdb46be8d76b, type: 2}
+  _swordAttack2Attacking: {fileID: 11400000, guid: b0df731a670bd674fbcebfc1d777471b, type: 2}
+  _swordAttack3Attacking: {fileID: 11400000, guid: 7e8ede70efccd6d499294c0d0806372f, type: 2}
 --- !u!1 &1514047242
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
 
     private Rigidbody2D _rigidbody;
     private Vector2 _moveDirection;
-    private Vector2 _dodgeDirection;
+    private Vector2 _fixedDirecton;
     private Vector2 _inputVec;
     private SpriteRenderer _sprite;
 
@@ -25,10 +25,13 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_abilitySystem.HasTagApplied(AbilitySystemDB.Instance.DodgeRollDodging))
+        if (_abilitySystem.HasTagApplied(AbilitySystemDB.Instance.DodgeRollDodging) ||
+            _abilitySystem.HasTagApplied(AbilitySystemDB.Instance.SwordAttack1Attacking) ||
+            _abilitySystem.HasTagApplied(AbilitySystemDB.Instance.SwordAttack2Attacking) ||
+            _abilitySystem.HasTagApplied(AbilitySystemDB.Instance.SwordAttack3Attacking))
         {
             // Currently dodging
-            _moveDirection = _dodgeDirection;
+            _moveDirection = _fixedDirecton;
         }
         else
         {
@@ -48,6 +51,14 @@ public class Player : MonoBehaviour
 
     }
 
+    protected void OnAttack1(InputValue input)
+    {
+        _fixedDirecton = _moveDirection;
+        _abilitySystem.UseAbility(1);
+        _abilitySystem.UseAbility(2);
+        _abilitySystem.UseAbility(3);
+    }
+
     protected void OnMove(InputValue input)
     {
         _inputVec = input.Get<Vector2>().normalized;
@@ -55,7 +66,7 @@ public class Player : MonoBehaviour
 
     protected void OnDodge(InputValue input)
     {
-        _dodgeDirection = _moveDirection;
+        _fixedDirecton = _moveDirection;
         _abilitySystem.UseAbility(0);
     }
 }

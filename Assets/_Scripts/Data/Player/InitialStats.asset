@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _abilityName: InitialStats
   _numberOfUses: 0
+  _requiredTags: []
+  _blockedTags: []
   _cost:
     DurationStyle: 0
     Delay: 0
