@@ -1,14 +1,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace AbilitySystem
 {
     [Serializable]
-    public struct GameEffect
+    public class GameEffect
     {
         public DurationType DurationStyle;
+        public SN<int> IsRelativeToIndex;
         public float Delay;
         public float Duration;
 
@@ -24,7 +26,14 @@ namespace AbilitySystem
         /// The time between update ticks
         /// </summary>
         public float Period;
+
+        public GameObject AreaOfEffect;
+        public LayerMask LayerMask;
+
+        // Gets filled in during ability instantiation
+        [NonSerialized] public List<GameEffect> PostEffects = new List<GameEffect>();
     }
+
 
     [Serializable]
     public struct EffectModifier
@@ -42,6 +51,6 @@ namespace AbilitySystem
 
     public enum ModifierType
     {
-        Add, Multiply, Override
+        Add, Multiply, Override, Percent
     }
 }

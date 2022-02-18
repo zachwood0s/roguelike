@@ -17,7 +17,7 @@ public class AttributeDebugUI : MonoBehaviour
         string s = "Attributes:\n";
         foreach (var a in _attributes.Attributes)
         {
-            s += $"{a.Name}: {_attributes.GetAttributeValue(a).CurrentValue}\n";
+            s += $"{a.Name}: {_attributes.GetAttributeValue(a).CurrentValue:F}\n";
         }
 
         s += "\nTags:\n";

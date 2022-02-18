@@ -19,36 +19,83 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b0df731a670bd674fbcebfc1d777471b, type: 2}
   - {fileID: 11400000, guid: 7e8ede70efccd6d499294c0d0806372f, type: 2}
   - {fileID: 11400000, guid: aa868fcca2af07b4ca9212b040502f79, type: 2}
+  - {fileID: 11400000, guid: 44af02b5d1b812841bf56e6ea299fb75, type: 2}
+  - {fileID: 11400000, guid: b8a5dedd772a7d440a9ca2dc70fcb17e, type: 2}
   _cost:
     DurationStyle: 0
+    IsRelativeToIndex:
+      v: 0
+      hasValue: 0
     Delay: 0
     Duration: 0
     Modifiers: []
     GrantedTags: []
     Period: 0
+    AreaOfEffect: {fileID: 0}
+    LayerMask:
+      serializedVersion: 2
+      m_Bits: 0
   _cooldown:
     DurationStyle: 1
+    IsRelativeToIndex:
+      v: 0
+      hasValue: 0
     Delay: 0
     Duration: 2
     Modifiers: []
     GrantedTags:
     - {fileID: 11400000, guid: bd000cadc56104344b3cb6947173f014, type: 2}
     Period: 0
+    AreaOfEffect: {fileID: 0}
+    LayerMask:
+      serializedVersion: 2
+      m_Bits: 0
   _resultingEffects:
   - DurationStyle: 1
+    IsRelativeToIndex:
+      v: 0
+      hasValue: 0
     Delay: 0
     Duration: 0.3
     Modifiers:
     - Attribute: {fileID: 11400000, guid: ffeba476918b9344b92977fb1a343a95, type: 2}
-      ModifierOperation: 1
-      Value: -0.9
+      ModifierOperation: 3
+      Value: 0.1
     GrantedTags:
     - {fileID: 11400000, guid: 2da08b95c17073745995cdb46be8d76b, type: 2}
     Period: 0
+    AreaOfEffect: {fileID: 0}
+    LayerMask:
+      serializedVersion: 2
+      m_Bits: 0
   - DurationStyle: 1
-    Delay: 0.3
-    Duration: 0.5
+    IsRelativeToIndex:
+      v: 0
+      hasValue: 1
+    Delay: 0
+    Duration: 0.6
     Modifiers: []
     GrantedTags:
     - {fileID: 11400000, guid: b8a5dedd772a7d440a9ca2dc70fcb17e, type: 2}
     Period: 0
+    AreaOfEffect: {fileID: 0}
+    LayerMask:
+      serializedVersion: 2
+      m_Bits: 0
+  - DurationStyle: 0
+    IsRelativeToIndex:
+      v: 0
+      hasValue: 0
+    Delay: 0.1
+    Duration: 0
+    Modifiers:
+    - Attribute: {fileID: 11400000, guid: eb4ec5af06c712c4d892768baae3273e, type: 2}
+      ModifierOperation: 0
+      Value: -10
+    GrantedTags:
+    - {fileID: 11400000, guid: b8a5dedd772a7d440a9ca2dc70fcb17e, type: 2}
+    Period: 0
+    AreaOfEffect: {fileID: 6098567126720262738, guid: d7f5674d920938b4ba3417491544408a, type: 3}
+    LayerMask:
+      serializedVersion: 2
+      m_Bits: 512

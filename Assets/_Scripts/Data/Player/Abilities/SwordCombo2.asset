@@ -21,34 +21,62 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7e8ede70efccd6d499294c0d0806372f, type: 2}
   _cost:
     DurationStyle: 0
+    IsRelativeToIndex:
+      v: 0
+      hasValue: 0
     Delay: 0
     Duration: 0
     Modifiers: []
     GrantedTags: []
     Period: 0
+    AreaOfEffect: {fileID: 0}
+    LayerMask:
+      serializedVersion: 2
+      m_Bits: 0
   _cooldown:
     DurationStyle: 1
+    IsRelativeToIndex:
+      v: 0
+      hasValue: 0
     Delay: 0
     Duration: 2
     Modifiers: []
     GrantedTags:
     - {fileID: 11400000, guid: 94b909daec1b06e47b42a02901036a63, type: 2}
     Period: 0
+    AreaOfEffect: {fileID: 0}
+    LayerMask:
+      serializedVersion: 2
+      m_Bits: 0
   _resultingEffects:
   - DurationStyle: 1
+    IsRelativeToIndex:
+      v: 0
+      hasValue: 0
     Delay: 0
     Duration: 0.4
     Modifiers:
     - Attribute: {fileID: 11400000, guid: ffeba476918b9344b92977fb1a343a95, type: 2}
-      ModifierOperation: 1
-      Value: -0.9
+      ModifierOperation: 3
+      Value: 0.1
     GrantedTags:
     - {fileID: 11400000, guid: b0df731a670bd674fbcebfc1d777471b, type: 2}
     Period: 0
+    AreaOfEffect: {fileID: 0}
+    LayerMask:
+      serializedVersion: 2
+      m_Bits: 0
   - DurationStyle: 1
-    Delay: 0.4
-    Duration: 0.4
+    IsRelativeToIndex:
+      v: 0
+      hasValue: 1
+    Delay: 0
+    Duration: 0.3
     Modifiers: []
     GrantedTags:
     - {fileID: 11400000, guid: 44af02b5d1b812841bf56e6ea299fb75, type: 2}
     Period: 0
+    AreaOfEffect: {fileID: 0}
+    LayerMask:
+      serializedVersion: 2
+      m_Bits: 0

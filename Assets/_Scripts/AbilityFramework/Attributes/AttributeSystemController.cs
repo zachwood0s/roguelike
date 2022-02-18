@@ -20,7 +20,8 @@ namespace AbilitySystem
             {
                 val = new AttributeValue()
                 {
-                    Attribute = attribute
+                    Attribute = attribute,
+                    Modifier = new AttributeModifier(attribute)
                 };
                 _attributeMapping[attribute] = val;
             }
@@ -49,7 +50,7 @@ namespace AbilitySystem
             foreach (var key in keys)
             {
                 var val = _attributeMapping[key];
-                val.Modifier = default;
+                val.Modifier = new AttributeModifier(key);
                 _attributeMapping[key] = val;
             }
         }
@@ -70,7 +71,8 @@ namespace AbilitySystem
             {
                 _attributeMapping[attr] = new AttributeValue()
                 {
-                    Attribute = attr
+                    Attribute = attr,
+                    Modifier = new AttributeModifier(attr)
                 };
             }
         }

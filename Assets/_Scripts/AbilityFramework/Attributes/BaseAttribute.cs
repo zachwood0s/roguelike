@@ -19,6 +19,7 @@ namespace AbilitySystem
             {
                 val.CurrentValue = val.Modifier.Override;
             }
+            val.CurrentValue *= val.Modifier.Percent;
             return val;
         }
     }

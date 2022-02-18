@@ -23,6 +23,10 @@ MonoBehaviour:
     Modifiers: []
     GrantedTags: []
     Period: 0
+    AreaOfEffect: {fileID: 0}
+    LayerMask:
+      serializedVersion: 2
+      m_Bits: 0
   _cooldown:
     DurationStyle: 0
     Delay: 0
@@ -30,6 +34,10 @@ MonoBehaviour:
     Modifiers: []
     GrantedTags: []
     Period: 0
+    AreaOfEffect: {fileID: 0}
+    LayerMask:
+      serializedVersion: 2
+      m_Bits: 0
   _resultingEffects:
   - DurationStyle: 0
     Delay: 0
@@ -37,6 +45,13 @@ MonoBehaviour:
     Modifiers:
     - Attribute: {fileID: 11400000, guid: ffeba476918b9344b92977fb1a343a95, type: 2}
       ModifierOperation: 0
-      Value: 8
+      Value: 9
+    - Attribute: {fileID: 11400000, guid: eb4ec5af06c712c4d892768baae3273e, type: 2}
+      ModifierOperation: 0
+      Value: 100
     GrantedTags: []
     Period: 0
+    AreaOfEffect: {fileID: 0}
+    LayerMask:
+      serializedVersion: 2
+      m_Bits: 0

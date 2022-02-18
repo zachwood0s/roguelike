@@ -13,7 +13,11 @@ namespace AbilitySystem
         public float Period { get; private set; }
         public float TimeUntilPeriodTick { get; private set; }
 
-        public InstantiatedGameEffect(GameEffect effect)
+        public AbilitySystemController Source;
+        public AbilitySystemController Target;
+
+
+        public InstantiatedGameEffect(GameEffect effect, AbilitySystemController source, AbilitySystemController target)
         {
             GameEffect = effect;
             StartDelay = effect.Delay;
@@ -21,6 +25,8 @@ namespace AbilitySystem
             RemainingTime = TotalTime;
             Period = effect.Period;
             TimeUntilPeriodTick = Period;
+            Source = source;
+            Target = target;
         }
 
         public bool DoTick(float deltaTime)

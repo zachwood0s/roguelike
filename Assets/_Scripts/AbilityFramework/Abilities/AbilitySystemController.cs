@@ -26,26 +26,83 @@ namespace AbilitySystem
             StartCoroutine(_instantiatedAbilities[i].TryActivateAbility());
         }
 
-        public void ApplyGameplayEffectToSelf(InstantiatedGameEffect inst)
+        public void ApplyGameEffectToApplicable(GameEffect r)
+        {
+            if (r.AreaOfEffect == null)
+            {
+                // No hitbox, apply this to self
+                ApplyGameEffectToSelf(new InstantiatedGameEffect(r, this, this));
+            }
+            else
+            {
+                // Perform the hitbox check and apply the effect
+                IEnumerator _Work()
+                {
+                    yield return new WaitForSeconds(r.Delay);
+
+                    var obj = Instantiate(r.AreaOfEffect, transform);
+                    var colliders = obj.GetComponents<Collider2D>();
+
+                    var targetSet = new HashSet<Collider2D>();
+                    var colliderFilter = new ContactFilter2D();
+                    colliderFilter.SetLayerMask(r.LayerMask);
+
+                    foreach (var c in colliders)
+                    {
+                        var res = new List<Collider2D>();
+                        Physics2D.OverlapCollider(c, colliderFilter, res);
+                        targetSet.UnionWith(res);
+                    }
+
+                    foreach (var t in targetSet)
+                    {
+                        var target = t.GetComponent<AbilitySystemController>();
+                        if (target != null)
+                        {
+                            target.ApplyGameEffectToSelfNoDelay(new InstantiatedGameEffect(r, this, target));
+                        }
+                    }
+
+                    Destroy(obj);
+                }
+
+                StartCoroutine(_Work());
+            }
+        }
+
+        public void ApplyGameEffectToSelf(InstantiatedGameEffect inst)
         {
             Debug.Assert(inst != null);
 
-            IEnumerator _Work()
+            if(inst.StartDelay != 0)
             {
-                yield return new WaitForSeconds(inst.StartDelay);
-                switch (inst.GameEffect.DurationStyle)
-                {
-                    case DurationType.Instant:
-                        _ApplyInstantGameEffect(inst);
-                        break;
-                    case DurationType.Timed:
-                        _ApplyTimedGameEffect(inst);
-                        break;
-                }
-                yield return null;
+                StartCoroutine(ApplyGameEffectToSelfAfterDelay(inst));
             }
+            else
+            {
+                ApplyGameEffectToSelfNoDelay(inst);
+            }
+        }
 
-            StartCoroutine(_Work());
+
+        public IEnumerator ApplyGameEffectToSelfAfterDelay(InstantiatedGameEffect inst)
+        {
+            yield return new WaitForSeconds(inst.StartDelay);
+            ApplyGameEffectToSelfNoDelay(inst);
+            yield return null;
+        }
+
+        public void ApplyGameEffectToSelfNoDelay(InstantiatedGameEffect inst)
+        {
+            switch (inst.GameEffect.DurationStyle)
+            {
+                case DurationType.Instant:
+                    _ApplyInstantGameEffect(inst);
+                    break;
+                case DurationType.Timed:
+                    _ApplyTimedGameEffect(inst);
+                    break;
+            }
         }
 
         private void _ActivateInitializationAbilities()
@@ -97,6 +154,7 @@ namespace AbilitySystem
                     ModifierType.Add => val.BaseValue + mod.Value,
                     ModifierType.Multiply => val.BaseValue * mod.Value,
                     ModifierType.Override => mod.Value,
+                    ModifierType.Percent => val.BaseValue * mod.Value,
                     _ => 0
                 };
                 _attributeSystem.SetAttributeBaseValue(mod.Attribute, newBase);
@@ -119,8 +177,25 @@ namespace AbilitySystem
 
         private void _CleanGameEffects()
         {
+
+            for (var i = _appliedGameEffects.Count - 1; i >= 0; i--)
+            {
+                var (inst, modifiers) = _appliedGameEffects[i];
+                if (inst.GameEffect.DurationStyle == DurationType.Timed && inst.RemainingTime <= 0)
+                {
+                    // This effect is about to be removed, spawn its post effects if they exist
+                    foreach (var newEffect in inst.GameEffect.PostEffects)
+                    {
+                        inst.Source.ApplyGameEffectToApplicable(newEffect);
+                    }
+
+                    _appliedGameEffects.RemoveAt(i);
+                }
+            }
+            /*
             _appliedGameEffects.RemoveAll(
                 x => x.inst.GameEffect.DurationStyle == DurationType.Timed && x.inst.RemainingTime <= 0);
+            */
         }
 
         protected void Awake()

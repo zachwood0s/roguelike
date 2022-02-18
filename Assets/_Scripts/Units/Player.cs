@@ -37,7 +37,14 @@ public class Player : MonoBehaviour
         {
             _moveDirection = _inputVec;
         }
-        _sprite.flipX = _moveDirection.x < 0;
+        if(_moveDirection.x < 0)
+        {
+            _sprite.flipX = true;
+        }
+        else if(_moveDirection.x > 0)
+        {
+            _sprite.flipX = false;
+        }
 
     }
 

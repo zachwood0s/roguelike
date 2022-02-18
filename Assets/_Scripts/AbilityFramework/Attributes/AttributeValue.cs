@@ -18,12 +18,17 @@ namespace AbilitySystem
         public float Add;
         public float Multiply;
         public float Override;
+        public float Percent;
 
-        public AttributeModifier(BaseAttribute attr, ModifierType t, float magnitude)
+        public AttributeModifier(BaseAttribute attr)
         {
             Attribute = attr;
             Add = Multiply = Override = 0;
+            Percent = 1;
+        }
 
+        public AttributeModifier(BaseAttribute attr, ModifierType t, float magnitude) : this(attr)
+        {
             switch(t)
             {
                 case ModifierType.Add:
@@ -35,6 +40,11 @@ namespace AbilitySystem
                 case ModifierType.Override:
                     Override = magnitude;
                     break;
+                case ModifierType.Percent:
+                    Percent = magnitude;
+                    break;
+
+
             }
         }
 
@@ -43,6 +53,7 @@ namespace AbilitySystem
             other.Add += Add;
             other.Multiply += Multiply;
             other.Override = Override;
+            other.Percent = Mathf.Min(Percent, other.Percent);
             return other;
         }
     }

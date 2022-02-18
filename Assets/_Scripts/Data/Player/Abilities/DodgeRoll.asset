@@ -21,37 +21,68 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7e8ede70efccd6d499294c0d0806372f, type: 2}
   _cost:
     DurationStyle: 0
+    IsRelativeToIndex:
+      v: 0
+      hasValue: 0
     Delay: 0
     Duration: 0
     Modifiers: []
     GrantedTags: []
     Period: 0
+    AreaOfEffect: {fileID: 0}
+    LayerMask:
+      serializedVersion: 2
+      m_Bits: 0
   _cooldown:
     DurationStyle: 1
+    IsRelativeToIndex:
+      v: 0
+      hasValue: 0
     Delay: 0
     Duration: 3
     Modifiers: []
     GrantedTags:
     - {fileID: 11400000, guid: 1489af1bde0036f47b174851d0949164, type: 2}
     Period: 0
+    AreaOfEffect: {fileID: 0}
+    LayerMask:
+      serializedVersion: 2
+      m_Bits: 0
   _resultingEffects:
   - DurationStyle: 1
+    IsRelativeToIndex:
+      v: 0
+      hasValue: 0
     Delay: 0
     Duration: 0.15
     Modifiers:
     - Attribute: {fileID: 11400000, guid: ffeba476918b9344b92977fb1a343a95, type: 2}
-      ModifierOperation: 1
-      Value: 1.1
+      ModifierOperation: 3
+      Value: 2.1
     GrantedTags: []
     Period: 0
+    AreaOfEffect: {fileID: 0}
+    LayerMask:
+      serializedVersion: 2
+      m_Bits: 0
   - DurationStyle: 1
+    IsRelativeToIndex:
+      v: 0
+      hasValue: 0
     Delay: 0
     Duration: 0.3
     Modifiers: []
     GrantedTags:
     - {fileID: 11400000, guid: 7e9566b94d7a4ed44bc291e271253bb3, type: 2}
     Period: 0
+    AreaOfEffect: {fileID: 0}
+    LayerMask:
+      serializedVersion: 2
+      m_Bits: 0
   - DurationStyle: 1
+    IsRelativeToIndex:
+      v: 0
+      hasValue: 0
     Delay: 0.15
     Duration: 1
     Modifiers:
@@ -60,10 +91,21 @@ MonoBehaviour:
       Value: -0.5
     GrantedTags: []
     Period: 0
+    AreaOfEffect: {fileID: 0}
+    LayerMask:
+      serializedVersion: 2
+      m_Bits: 0
   - DurationStyle: 1
+    IsRelativeToIndex:
+      v: 0
+      hasValue: 0
     Delay: 0
     Duration: 0.45
     Modifiers: []
     GrantedTags:
     - {fileID: 11400000, guid: aa868fcca2af07b4ca9212b040502f79, type: 2}
     Period: 0
+    AreaOfEffect: {fileID: 0}
+    LayerMask:
+      serializedVersion: 2
+      m_Bits: 0
