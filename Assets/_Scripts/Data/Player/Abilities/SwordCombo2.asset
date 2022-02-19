@@ -39,7 +39,7 @@ MonoBehaviour:
       v: 0
       hasValue: 0
     Delay: 0
-    Duration: 2
+    Duration: 1
     Modifiers: []
     GrantedTags:
     - {fileID: 11400000, guid: 94b909daec1b06e47b42a02901036a63, type: 2}
@@ -57,8 +57,32 @@ MonoBehaviour:
     Duration: 0.4
     Modifiers:
     - Attribute: {fileID: 11400000, guid: ffeba476918b9344b92977fb1a343a95, type: 2}
+      EffectCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: -3.1429007
+          outSlope: -3.1429007
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0.05555486
+        - serializedVersion: 3
+          time: 1
+          value: 0
+          inSlope: -0.027685393
+          outSlope: -0.027685393
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.0955559
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
       ModifierOperation: 3
-      Value: 0.1
+      Value: 2.5
     GrantedTags:
     - {fileID: 11400000, guid: b0df731a670bd674fbcebfc1d777471b, type: 2}
     Period: 0
@@ -71,7 +95,7 @@ MonoBehaviour:
       v: 0
       hasValue: 1
     Delay: 0
-    Duration: 0.3
+    Duration: 0.6
     Modifiers: []
     GrantedTags:
     - {fileID: 11400000, guid: 44af02b5d1b812841bf56e6ea299fb75, type: 2}

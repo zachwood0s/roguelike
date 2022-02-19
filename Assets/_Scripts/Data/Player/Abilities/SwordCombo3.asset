@@ -39,7 +39,7 @@ MonoBehaviour:
       v: 0
       hasValue: 0
     Delay: 0
-    Duration: 2
+    Duration: 1
     Modifiers: []
     GrantedTags:
     - {fileID: 11400000, guid: 0e4b40bd7ee4b1540b28001756fe3adc, type: 2}
@@ -71,8 +71,14 @@ MonoBehaviour:
     Duration: 0.4
     Modifiers:
     - Attribute: {fileID: 11400000, guid: ffeba476918b9344b92977fb1a343a95, type: 2}
+      EffectCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
       ModifierOperation: 3
-      Value: 0.1
+      Value: 0
     GrantedTags: []
     Period: 0
     AreaOfEffect: {fileID: 0}
@@ -84,11 +90,44 @@ MonoBehaviour:
       v: 1
       hasValue: 1
     Delay: 0
-    Duration: 0.2
+    Duration: 0.4
     Modifiers:
     - Attribute: {fileID: 11400000, guid: ffeba476918b9344b92977fb1a343a95, type: 2}
+      EffectCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: -3.8172557
+          outSlope: -3.8172557
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.055555563
+        - serializedVersion: 3
+          time: 0.20921925
+          value: 0.24857572
+          inSlope: -1.694236
+          outSlope: -1.694236
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.10084095
+        - serializedVersion: 3
+          time: 0.99975586
+          value: -0.19317627
+          inSlope: -0.027407816
+          outSlope: -0.027407816
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.11333326
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
       ModifierOperation: 1
-      Value: 1.2
+      Value: 4
     GrantedTags: []
     Period: 0
     AreaOfEffect: {fileID: 0}
@@ -103,6 +142,12 @@ MonoBehaviour:
     Duration: 0.3
     Modifiers:
     - Attribute: {fileID: 11400000, guid: ffeba476918b9344b92977fb1a343a95, type: 2}
+      EffectCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
       ModifierOperation: 3
       Value: 0.5
     GrantedTags: []

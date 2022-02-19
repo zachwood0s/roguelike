@@ -54,11 +54,53 @@ MonoBehaviour:
       v: 0
       hasValue: 0
     Delay: 0
-    Duration: 0.15
+    Duration: 0.6
     Modifiers:
     - Attribute: {fileID: 11400000, guid: ffeba476918b9344b92977fb1a343a95, type: 2}
-      ModifierOperation: 3
-      Value: 2.1
+      EffectCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0.0068971766
+          value: 0.9876526
+          inSlope: 0.20175363
+          outSlope: 0.20175363
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 1
+          outWeight: 0.61878186
+        - serializedVersion: 3
+          time: 0.19081607
+          value: 0.9919739
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 0.30309758
+          value: -0.56535494
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1.0057507
+          value: -0.5630414
+          inSlope: 0.0032925983
+          outSlope: 0.0032925983
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      ModifierOperation: 1
+      Value: 1.12
     GrantedTags: []
     Period: 0
     AreaOfEffect: {fileID: 0}
@@ -74,22 +116,6 @@ MonoBehaviour:
     Modifiers: []
     GrantedTags:
     - {fileID: 11400000, guid: 7e9566b94d7a4ed44bc291e271253bb3, type: 2}
-    Period: 0
-    AreaOfEffect: {fileID: 0}
-    LayerMask:
-      serializedVersion: 2
-      m_Bits: 0
-  - DurationStyle: 1
-    IsRelativeToIndex:
-      v: 0
-      hasValue: 0
-    Delay: 0.15
-    Duration: 1
-    Modifiers:
-    - Attribute: {fileID: 11400000, guid: ffeba476918b9344b92977fb1a343a95, type: 2}
-      ModifierOperation: 1
-      Value: -0.5
-    GrantedTags: []
     Period: 0
     AreaOfEffect: {fileID: 0}
     LayerMask:

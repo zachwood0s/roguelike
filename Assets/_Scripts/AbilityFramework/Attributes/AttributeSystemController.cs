@@ -21,7 +21,7 @@ namespace AbilitySystem
                 val = new AttributeValue()
                 {
                     Attribute = attribute,
-                    Modifier = new AttributeModifier(attribute)
+                    Modifier = new AttributeModifier(attribute, null)
                 };
                 _attributeMapping[attribute] = val;
             }
@@ -30,7 +30,13 @@ namespace AbilitySystem
 
         public void SetAttributeBaseValue(BaseAttribute attribute, float newVal)
         {
-            Debug.Assert(_attributeMapping.TryGetValue(attribute, out var val));
+            //AttributeValue val;
+            bool gotVal = _attributeMapping.TryGetValue(attribute, out var val);
+            if (!gotVal)
+            {
+                Debug.Log("Here");
+                return;
+            }
             val.BaseValue = newVal;
             _attributeMapping[attribute] = val;
         }
@@ -50,7 +56,7 @@ namespace AbilitySystem
             foreach (var key in keys)
             {
                 var val = _attributeMapping[key];
-                val.Modifier = new AttributeModifier(key);
+                val.Modifier = new AttributeModifier(key, val.Modifier.BaseMod);
                 _attributeMapping[key] = val;
             }
         }
@@ -72,7 +78,7 @@ namespace AbilitySystem
                 _attributeMapping[attr] = new AttributeValue()
                 {
                     Attribute = attr,
-                    Modifier = new AttributeModifier(attr)
+                    Modifier = new AttributeModifier(attr, null)
                 };
             }
         }

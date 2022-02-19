@@ -39,6 +39,7 @@ namespace AbilitySystem
     public struct EffectModifier
     {
         public BaseAttribute Attribute;
+        public AnimationCurve EffectCurve;
         public ModifierType ModifierOperation;
         public float Value;
     }

@@ -124,11 +124,19 @@ namespace AbilitySystem
 
         private void _UpdateAttributeSystem()
         {
-            foreach (var (_, mods) in _appliedGameEffects)
+            foreach (var (e, mods) in _appliedGameEffects)
             {
                 foreach (var m in mods)
                 {
-                    _attributeSystem.UpdateAttributeModifiers(m.Attribute, m);
+                    var appliedMod = m;
+                    if (m.BaseMod?.EffectCurve.length != 0)
+                    {
+                        var time = (e.TotalTime - e.RemainingTime) / e.TotalTime;
+                        appliedMod = m.ApplyAnimationCurve(
+                            m.BaseMod.Value.EffectCurve, m.BaseMod.Value.ModifierOperation, time);
+                    }
+                    //var animatedM = m.ApplyAnimationCurve(e.)
+                    _attributeSystem.UpdateAttributeModifiers(m.Attribute, appliedMod);
                 }
             }
         }
@@ -170,7 +178,7 @@ namespace AbilitySystem
             Debug.Assert(e.GameEffect.DurationStyle == DurationType.Timed);
 
             var modifiers = from mod in e.GameEffect.Modifiers
-                            select new AttributeModifier(mod.Attribute, mod.ModifierOperation, mod.Value);
+                            select new AttributeModifier(mod.Attribute, mod, mod.ModifierOperation, mod.Value);
 
             _appliedGameEffects.Add((e, modifiers.ToArray()));
         }

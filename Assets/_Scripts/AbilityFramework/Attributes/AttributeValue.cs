@@ -15,19 +15,22 @@ namespace AbilitySystem
     public struct AttributeModifier
     {
         public BaseAttribute Attribute;
+        public EffectModifier? BaseMod;
         public float Add;
         public float Multiply;
         public float Override;
         public float Percent;
 
-        public AttributeModifier(BaseAttribute attr)
+        public AttributeModifier(BaseAttribute attr, EffectModifier? mod)
         {
             Attribute = attr;
+            BaseMod = mod;
             Add = Multiply = Override = 0;
             Percent = 1;
         }
 
-        public AttributeModifier(BaseAttribute attr, ModifierType t, float magnitude) : this(attr)
+        public AttributeModifier(BaseAttribute attr, EffectModifier? mod, ModifierType t, float magnitude) 
+            : this(attr, mod)
         {
             switch(t)
             {
@@ -43,8 +46,6 @@ namespace AbilitySystem
                 case ModifierType.Percent:
                     Percent = magnitude;
                     break;
-
-
             }
         }
 
@@ -53,8 +54,27 @@ namespace AbilitySystem
             other.Add += Add;
             other.Multiply += Multiply;
             other.Override = Override;
-            other.Percent = Mathf.Min(Percent, other.Percent);
+            other.Percent *= Percent;
             return other;
+        }
+
+        public AttributeModifier ApplyAnimationCurve(AnimationCurve curve, ModifierType t, float time)
+        {
+
+            var multiplyer = curve.Evaluate(time);
+            switch(t)
+            {
+                case ModifierType.Add:
+                    Add *= multiplyer;
+                    break;
+                case ModifierType.Multiply:
+                    Multiply *= multiplyer;
+                    break;
+                case ModifierType.Percent:
+                    Percent *= multiplyer;
+                    break;
+            }
+            return this;
         }
     }
 }
