@@ -21,6 +21,20 @@ namespace AbilitySystem
 
         public bool HasTagApplied(GameTag t) => AppliedGameTags.Contains(t);
 
+        public bool HasTagApplied(GameTag t, out InstantiatedGameEffect firstInst)
+        {
+            foreach (var (inst, modifiers) in _appliedGameEffects)
+            {
+                if (inst.GameEffect.GrantedTags.Contains(t))
+                {
+                    firstInst = inst;
+                    return true;
+                }
+            }
+            firstInst = null;
+            return false;
+        }
+
         public void UseAbility(int i)
         {
             StartCoroutine(_instantiatedAbilities[i].TryActivateAbility());
@@ -46,6 +60,7 @@ namespace AbilitySystem
                     var targetSet = new HashSet<Collider2D>();
                     var colliderFilter = new ContactFilter2D();
                     colliderFilter.SetLayerMask(r.LayerMask);
+                    colliderFilter.useTriggers = true;
 
                     foreach (var c in colliders)
                     {

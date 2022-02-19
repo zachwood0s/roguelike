@@ -9,6 +9,7 @@ public class AbilitySystemDB : Singleton<AbilitySystemDB>
     [SerializeField] private BaseAttribute _health;
     [SerializeField] private BaseAttribute _moveSpeed;
     [SerializeField] private BaseAttribute _currentMoveSpeed;
+    [SerializeField] private BaseAttribute _knockbackVel;
 
     // Tags
     [SerializeField] private GameTag _dodgeRollCooldown;
@@ -17,11 +18,13 @@ public class AbilitySystemDB : Singleton<AbilitySystemDB>
     [SerializeField] private GameTag _swordAttack1Attacking;
     [SerializeField] private GameTag _swordAttack2Attacking;
     [SerializeField] private GameTag _swordAttack3Attacking;
+    [SerializeField] private GameTag _knockedBack;
 
     // Attributes
     public BaseAttribute Health => _health;
     public BaseAttribute MoveSpeed => _moveSpeed;
     public BaseAttribute CurrentMoveSpeed => _currentMoveSpeed;
+    public BaseAttribute KnockbackVel => _knockbackVel;
 
     // Tags
     public GameTag DodgeRollCooldown => _dodgeRollCooldown;
@@ -30,5 +33,5 @@ public class AbilitySystemDB : Singleton<AbilitySystemDB>
     public GameTag SwordAttack1Attacking => _swordAttack1Attacking;
     public GameTag SwordAttack2Attacking => _swordAttack2Attacking;
     public GameTag SwordAttack3Attacking => _swordAttack3Attacking;
-
+    public GameTag Knockedback => _knockedBack;
 }

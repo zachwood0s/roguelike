@@ -75,6 +75,6 @@ public class Player : MonoBehaviour
     {
         _fixedDirecton = _moveDirection;
         //_abilitySystem.UseAbility(0);
-        _rigidbody.AddForce(Vector2.one * 1000);
+        //_rigidbody.AddForce(Vector2.one * 1000);
     }
 }

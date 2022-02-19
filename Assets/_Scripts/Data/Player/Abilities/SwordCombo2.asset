@@ -104,3 +104,66 @@ MonoBehaviour:
     LayerMask:
       serializedVersion: 2
       m_Bits: 0
+  - DurationStyle: 1
+    IsRelativeToIndex:
+      v: 0
+      hasValue: 0
+    Delay: 0.3
+    Duration: 0.2
+    Modifiers:
+    - Attribute: {fileID: 11400000, guid: 1dcaf15cf9c49f24092fb3ae58e0cea5, type: 2}
+      EffectCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: -1.6523439
+          outSlope: -1.6523439
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0.07111111
+        - serializedVersion: 3
+          time: 1
+          value: 0
+          inSlope: -0.055670343
+          outSlope: -0.055670343
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.7296339
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      ModifierOperation: 0
+      Value: 60
+    GrantedTags:
+    - {fileID: 11400000, guid: cc03531c2ee84d44997affe75b4bd1ca, type: 2}
+    Period: 0
+    AreaOfEffect: {fileID: 1654846000916100397, guid: 23a69309900f8f14691b07898155f6b6, type: 3}
+    LayerMask:
+      serializedVersion: 2
+      m_Bits: 512
+  - DurationStyle: 0
+    IsRelativeToIndex:
+      v: 0
+      hasValue: 0
+    Delay: 0.3
+    Duration: 0
+    Modifiers:
+    - Attribute: {fileID: 11400000, guid: eb4ec5af06c712c4d892768baae3273e, type: 2}
+      EffectCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 0
+      ModifierOperation: 0
+      Value: -10
+    GrantedTags: []
+    Period: 0
+    AreaOfEffect: {fileID: 1654846000916100397, guid: 23a69309900f8f14691b07898155f6b6, type: 3}
+    LayerMask:
+      serializedVersion: 2
+      m_Bits: 512
