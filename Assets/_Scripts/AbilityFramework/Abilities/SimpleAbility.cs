@@ -16,30 +16,8 @@ namespace AbilitySystem
 
         public override AbstractInstantiatedAbility InstantiateAbility(AbilitySystemController owner)
         {
-            _LinkGameEffects(_resultingEffects);
+            _startingEffects = GameEffect.LinkGameEffects(_resultingEffects);
             return new SimpleInstantiatedAbility(this, owner);
-        }
-
-
-        private void _LinkGameEffects(List<GameEffect> effects)
-        {
-            _startingEffects = new List<GameEffect>();
-            foreach (var e in effects)
-            {
-                // Clear them out
-                e.PostEffects = new List<GameEffect>();
-            }
-            foreach (var e in effects)
-            {
-                if (e.IsRelativeToIndex.HasValue)
-                {
-                    effects[e.IsRelativeToIndex.Value].PostEffects.Add(e);
-                }
-                else
-                {
-                    _startingEffects.Add(e);
-                }
-            }
         }
 
         public class SimpleInstantiatedAbility : AbstractInstantiatedAbility
@@ -56,47 +34,7 @@ namespace AbilitySystem
 
                 foreach (var r in sa._startingEffects)
                 {
-                    _owner.ApplyGameEffectToApplicable(r);
-                    /*
-                    if(r.AreaOfEffect == null)
-                    {
-                        _owner.ApplyGameEffectToSelf(new InstantiatedGameEffect(r, _owner, _owner));
-                    }
-                    else
-                    {
-                        IEnumerator _Work()
-                        {
-                            yield return new WaitForSeconds(r.Delay);
-
-                            var obj = Instantiate(r.AreaOfEffect, _owner.transform);
-                            var colliders = obj.GetComponents<Collider2D>();
-
-                            var targetSet = new HashSet<Collider2D>();
-                            var colliderFilter = new ContactFilter2D();
-                            colliderFilter.SetLayerMask(r.LayerMask);
-
-                            foreach (var c in colliders)
-                            {
-                                var res = new List<Collider2D>();
-                                Physics2D.OverlapCollider(c, colliderFilter, res);
-                                targetSet.UnionWith(res);
-                            }
-
-                            foreach(var t in targetSet)
-                            {
-                                var target = t.GetComponent<AbilitySystemController>();
-                                if(target != null)
-                                {
-                                    target.ApplyGameEffectToSelfNoDelay(new InstantiatedGameEffect(r, _owner, target));
-                                }
-                            }
-
-                            Destroy(obj);
-                        }
-
-                        _owner.StartCoroutine(_Work());
-                    }
-                    */
+                    _owner.ApplyGameEffectToSelf(new InstantiatedGameEffect(r, _owner, _owner));
                 }
                 yield return null;
             }

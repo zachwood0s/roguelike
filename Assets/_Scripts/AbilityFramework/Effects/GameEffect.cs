@@ -27,11 +27,30 @@ namespace AbilitySystem
         /// </summary>
         public float Period;
 
-        public GameObject AreaOfEffect;
-        public LayerMask LayerMask;
-
         // Gets filled in during ability instantiation
         [NonSerialized] public List<GameEffect> PostEffects = new List<GameEffect>();
+
+        public static List<GameEffect> LinkGameEffects(List<GameEffect> effects)
+        {
+            var res = new List<GameEffect>();
+            foreach (var e in effects)
+            {
+                // Clear them out
+                e.PostEffects = new List<GameEffect>();
+            }
+            foreach (var e in effects)
+            {
+                if (e.IsRelativeToIndex.HasValue)
+                {
+                    effects[e.IsRelativeToIndex.Value].PostEffects.Add(e);
+                }
+                else
+                {
+                    res.Add(e);
+                }
+            }
+            return res;
+        }
     }
 
 

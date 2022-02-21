@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84b63519d8374cf4a8c8feb1f45c2342, type: 3}
+  m_Script: {fileID: 11500000, guid: 7fd5a9af9b547d2478612e8dcaf9d9eb, type: 3}
   m_Name: SwordCombo3
   m_EditorClassIdentifier: 
-  _abilityName: SwordCombo3
+  _abilityName: SwordCombo.3
   _numberOfUses: 0
   _requiredTags:
   - {fileID: 11400000, guid: 44af02b5d1b812841bf56e6ea299fb75, type: 2}
@@ -29,10 +29,6 @@ MonoBehaviour:
     Modifiers: []
     GrantedTags: []
     Period: 0
-    AreaOfEffect: {fileID: 0}
-    LayerMask:
-      serializedVersion: 2
-      m_Bits: 0
   _cooldown:
     DurationStyle: 1
     IsRelativeToIndex:
@@ -44,11 +40,7 @@ MonoBehaviour:
     GrantedTags:
     - {fileID: 11400000, guid: 0e4b40bd7ee4b1540b28001756fe3adc, type: 2}
     Period: 0
-    AreaOfEffect: {fileID: 0}
-    LayerMask:
-      serializedVersion: 2
-      m_Bits: 0
-  _resultingEffects:
+  _alwaysSelfEffects:
   - DurationStyle: 1
     IsRelativeToIndex:
       v: 0
@@ -59,10 +51,6 @@ MonoBehaviour:
     GrantedTags:
     - {fileID: 11400000, guid: 7e8ede70efccd6d499294c0d0806372f, type: 2}
     Period: 0
-    AreaOfEffect: {fileID: 0}
-    LayerMask:
-      serializedVersion: 2
-      m_Bits: 0
   - DurationStyle: 1
     IsRelativeToIndex:
       v: 0
@@ -81,10 +69,6 @@ MonoBehaviour:
       Value: 0
     GrantedTags: []
     Period: 0
-    AreaOfEffect: {fileID: 0}
-    LayerMask:
-      serializedVersion: 2
-      m_Bits: 0
   - DurationStyle: 1
     IsRelativeToIndex:
       v: 1
@@ -106,8 +90,8 @@ MonoBehaviour:
           inWeight: 0.33333334
           outWeight: 0.055555563
         - serializedVersion: 3
-          time: 0.20921925
-          value: 0.24857572
+          time: 0.19367054
+          value: 0.38282254
           inSlope: -1.694236
           outSlope: -1.694236
           tangentMode: 0
@@ -115,8 +99,8 @@ MonoBehaviour:
           inWeight: 0.33333334
           outWeight: 0.10084095
         - serializedVersion: 3
-          time: 0.99975586
-          value: -0.19317627
+          time: 0.993103
+          value: 0.04248047
           inSlope: -0.027407816
           outSlope: -0.027407816
           tangentMode: 0
@@ -126,14 +110,10 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      ModifierOperation: 1
-      Value: 4
+      ModifierOperation: 3
+      Value: 3
     GrantedTags: []
     Period: 0
-    AreaOfEffect: {fileID: 0}
-    LayerMask:
-      serializedVersion: 2
-      m_Bits: 0
   - DurationStyle: 1
     IsRelativeToIndex:
       v: 2
@@ -152,70 +132,69 @@ MonoBehaviour:
       Value: 0.5
     GrantedTags: []
     Period: 0
-    AreaOfEffect: {fileID: 0}
-    LayerMask:
-      serializedVersion: 2
-      m_Bits: 0
-  - DurationStyle: 1
-    IsRelativeToIndex:
-      v: 0
-      hasValue: 0
-    Delay: 0.5
-    Duration: 0.1
-    Modifiers:
-    - Attribute: {fileID: 11400000, guid: 1dcaf15cf9c49f24092fb3ae58e0cea5, type: 2}
-      EffectCurve:
+  _hitboxEffects:
+  - Delay: 0.4
+    HitboxDescription:
+      Prefab: {fileID: 8295555623627778917, guid: 1f4e0db24fccbda4c9bf11f0a781ce24, type: 3}
+      AliveDuration: 0.5
+      LayerMask:
         serializedVersion: 2
-        m_Curve:
-        - serializedVersion: 3
-          time: 0
-          value: 1
-          inSlope: -2.9000773
-          outSlope: -2.9000773
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0.0845159
-        - serializedVersion: 3
-          time: 1
-          value: 0
-          inSlope: -0.055670343
-          outSlope: -0.055670343
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0.7296339
-          outWeight: 0
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      ModifierOperation: 0
-      Value: 90
-    GrantedTags:
-    - {fileID: 11400000, guid: cc03531c2ee84d44997affe75b4bd1ca, type: 2}
-    Period: 0
-    AreaOfEffect: {fileID: 1654846000916100397, guid: 23a69309900f8f14691b07898155f6b6, type: 3}
-    LayerMask:
-      serializedVersion: 2
-      m_Bits: 512
-  - DurationStyle: 0
-    IsRelativeToIndex:
-      v: 0
-      hasValue: 0
-    Delay: 0.5
-    Duration: 0
-    Modifiers:
-    - Attribute: {fileID: 11400000, guid: eb4ec5af06c712c4d892768baae3273e, type: 2}
-      EffectCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 0
-        m_PostInfinity: 0
-        m_RotationOrder: 0
-      ModifierOperation: 0
-      Value: -20
-    GrantedTags: []
-    Period: 0
-    AreaOfEffect: {fileID: 1654846000916100397, guid: 23a69309900f8f14691b07898155f6b6, type: 3}
-    LayerMask:
-      serializedVersion: 2
-      m_Bits: 512
+        m_Bits: 512
+    SelfOnHitEffects: []
+    TargetOnHitEffects:
+    - DurationStyle: 0
+      IsRelativeToIndex:
+        v: 0
+        hasValue: 0
+      Delay: 0
+      Duration: 0
+      Modifiers:
+      - Attribute: {fileID: 11400000, guid: eb4ec5af06c712c4d892768baae3273e, type: 2}
+        EffectCurve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 0
+          m_PostInfinity: 0
+          m_RotationOrder: 0
+        ModifierOperation: 0
+        Value: -10
+      GrantedTags: []
+      Period: 0
+    - DurationStyle: 1
+      IsRelativeToIndex:
+        v: 0
+        hasValue: 0
+      Delay: 0
+      Duration: 0.2
+      Modifiers:
+      - Attribute: {fileID: 11400000, guid: 1dcaf15cf9c49f24092fb3ae58e0cea5, type: 2}
+        EffectCurve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: -1
+            outSlope: -1
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: -1
+            outSlope: -1
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 0
+        ModifierOperation: 0
+        Value: 30
+      GrantedTags:
+      - {fileID: 11400000, guid: 1d50d5cc49f168d44b19ee759f4fa2e8, type: 2}
+      - {fileID: 11400000, guid: cc03531c2ee84d44997affe75b4bd1ca, type: 2}
+      Period: 0

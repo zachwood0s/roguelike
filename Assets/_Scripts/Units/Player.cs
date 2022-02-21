@@ -74,7 +74,6 @@ public class Player : MonoBehaviour
     protected void OnDodge(InputValue input)
     {
         _fixedDirecton = _moveDirection;
-        //_abilitySystem.UseAbility(0);
-        //_rigidbody.AddForce(Vector2.one * 1000);
+        _abilitySystem.UseAbility(0);
     }
 }

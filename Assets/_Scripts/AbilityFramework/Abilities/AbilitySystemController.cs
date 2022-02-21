@@ -40,51 +40,6 @@ namespace AbilitySystem
             StartCoroutine(_instantiatedAbilities[i].TryActivateAbility());
         }
 
-        public void ApplyGameEffectToApplicable(GameEffect r)
-        {
-            if (r.AreaOfEffect == null)
-            {
-                // No hitbox, apply this to self
-                ApplyGameEffectToSelf(new InstantiatedGameEffect(r, this, this));
-            }
-            else
-            {
-                // Perform the hitbox check and apply the effect
-                IEnumerator _Work()
-                {
-                    yield return new WaitForSeconds(r.Delay);
-
-                    var obj = Instantiate(r.AreaOfEffect, transform);
-                    var colliders = obj.GetComponents<Collider2D>();
-
-                    var targetSet = new HashSet<Collider2D>();
-                    var colliderFilter = new ContactFilter2D();
-                    colliderFilter.SetLayerMask(r.LayerMask);
-                    colliderFilter.useTriggers = true;
-
-                    foreach (var c in colliders)
-                    {
-                        var res = new List<Collider2D>();
-                        Physics2D.OverlapCollider(c, colliderFilter, res);
-                        targetSet.UnionWith(res);
-                    }
-
-                    foreach (var t in targetSet)
-                    {
-                        var target = t.GetComponent<AbilitySystemController>();
-                        if (target != null)
-                        {
-                            target.ApplyGameEffectToSelfNoDelay(new InstantiatedGameEffect(r, this, target));
-                        }
-                    }
-
-                    Destroy(obj);
-                }
-
-                StartCoroutine(_Work());
-            }
-        }
-
         public void ApplyGameEffectToSelf(InstantiatedGameEffect inst)
         {
             Debug.Assert(inst != null);
@@ -209,7 +164,8 @@ namespace AbilitySystem
                     // This effect is about to be removed, spawn its post effects if they exist
                     foreach (var newEffect in inst.GameEffect.PostEffects)
                     {
-                        inst.Source.ApplyGameEffectToApplicable(newEffect);
+                        inst.Target.ApplyGameEffectToSelf(
+                            new InstantiatedGameEffect(newEffect, inst.Source, inst.Target));
                     }
 
                     _appliedGameEffects.RemoveAt(i);
