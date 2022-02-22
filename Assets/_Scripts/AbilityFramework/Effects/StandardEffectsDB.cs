@@ -13,7 +13,7 @@ public class StandardEffectsDB : ScriptableObject
         {
             if (_instance == null)
             {
-                _instance = Resources.Load(typeof(StandardEffectsDB).Name) as StandardEffectsDB;
+                _instance = Resources.Load("Data/"+typeof(StandardEffectsDB).Name) as StandardEffectsDB;
             }
             return _instance;
         }

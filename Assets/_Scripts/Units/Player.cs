@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     [SerializeField] private AbilitySystemController _abilitySystem;
     [SerializeField] private AttributeSystemController _attributeSystem;
     [SerializeField] private Animator _animator;
+    [SerializeField] private Camera _camera;
 
     private Rigidbody2D _rigidbody;
     private Vector2 _moveDirection;
@@ -60,7 +61,9 @@ public class Player : MonoBehaviour
 
     protected void OnAttack1(InputValue input)
     {
-        _fixedDirecton = _moveDirection;
+        var mouse = Mouse.current.position.ReadValue();
+        Vector2 worldPosition = _camera.ScreenToWorldPoint(mouse);
+        _fixedDirecton = (worldPosition - (Vector2) transform.position).normalized;
         _abilitySystem.UseAbility(1);
         _abilitySystem.UseAbility(2);
         _abilitySystem.UseAbility(3);

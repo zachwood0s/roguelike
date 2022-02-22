@@ -17,17 +17,10 @@ public class DamageAttributeTargetConsumer : AbstractAttributeTargetConsumer
 
         // Modify health
         attrs.SetAttributeBaseValue(AbilitySystemDB.Instance.Health, curHealth.CurrentValue - healthLost);
-        if (healthLost > 0)
-        {
-            Debug.Log($"Cur {curHealth.CurrentValue} health");
-            Debug.Log($"Took {healthLost} health");
-        }
 
-        // Apply burn
         if (damageBurn.CurrentValue > 0)
         {
-            Debug.Log("Burn");
-            // Apply stacks
+            // Apply burn
             abilities.ApplyGameEffectToSelfNoDelay(InstantiateBurn(abilities, damageBurn.CurrentValue));
         }
 

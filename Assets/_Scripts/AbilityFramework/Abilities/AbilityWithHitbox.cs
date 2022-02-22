@@ -95,7 +95,6 @@ namespace AbilitySystem
 
                     if (targetSet.Count > 0)
                     {
-                        Debug.Log("Hit");
                         // Hit happened, apply all self on hit effects
                         foreach (var selfEffect in e.SelfOnHitEffects)
                         {
