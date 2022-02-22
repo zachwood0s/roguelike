@@ -7,7 +7,7 @@ using UnityEngine;
 namespace AbilitySystem
 {
     [Serializable]
-    public class GameEffect
+    public class GameEffect : ICloneable
     {
         public DurationType DurationStyle;
         public SN<int> IsRelativeToIndex;
@@ -50,6 +50,15 @@ namespace AbilitySystem
                 }
             }
             return res;
+        }
+
+        public object Clone()
+        {
+            var effect = (GameEffect) MemberwiseClone();
+            effect.Modifiers = (EffectModifier[]) Modifiers.Clone();
+            effect.GrantedTags = (GameTag[]) GrantedTags.Clone();
+            effect.PostEffects = new List<GameEffect>(PostEffects);
+            return effect;
         }
     }
 

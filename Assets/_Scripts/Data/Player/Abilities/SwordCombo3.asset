@@ -149,7 +149,7 @@ MonoBehaviour:
       Delay: 0
       Duration: 0
       Modifiers:
-      - Attribute: {fileID: 11400000, guid: eb4ec5af06c712c4d892768baae3273e, type: 2}
+      - Attribute: {fileID: 11400000, guid: 454fe90d6d26bf54ba981b2e00478c5e, type: 2}
         EffectCurve:
           serializedVersion: 2
           m_Curve: []
@@ -157,7 +157,7 @@ MonoBehaviour:
           m_PostInfinity: 0
           m_RotationOrder: 0
         ModifierOperation: 0
-        Value: -10
+        Value: 10
       GrantedTags: []
       Period: 0
     - DurationStyle: 1

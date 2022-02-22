@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,12 +13,20 @@ namespace AbilitySystem
         [SerializeField] private List<AbstractAbility> _initializationAbilities;
         [SerializeField] private AttributeSystemController _attributeSystem;
 
+        private List<AbstractAttributeTargetConsumer> _targetConsumers;
         private List<AbstractInstantiatedAbility> _instantiatedAbilities = new List<AbstractInstantiatedAbility>();
         private List<(InstantiatedGameEffect inst, AttributeModifier[] modifiers)> _appliedGameEffects 
             = new List<(InstantiatedGameEffect inst, AttributeModifier[] modifiers)>();
 
         public IEnumerable<GameTag> AppliedGameTags =>
             _appliedGameEffects.SelectMany(x => x.inst.GameEffect.GrantedTags);
+
+        public IEnumerable<InstantiatedGameEffect> AppliedGameEffects
+            => _appliedGameEffects.Select(x => x.inst);
+
+        public IEnumerable<InstantiatedGameEffect> AppliedGameEffectsForAttribute(BaseAttribute attr)
+            => _appliedGameEffects.Where(x => x.modifiers.Any(m => m.Attribute == attr))
+                                  .Select(x => x.inst);
 
         public bool HasTagApplied(GameTag t) => AppliedGameTags.Contains(t);
 
@@ -92,6 +101,12 @@ namespace AbilitySystem
             }
         }
 
+        private void _GetTargetConsumers()
+        {
+            var comps = GetComponents<AbstractAttributeTargetConsumer>();
+            _targetConsumers = new List<AbstractAttributeTargetConsumer>(comps);
+        }
+
         private void _UpdateAttributeSystem()
         {
             foreach (var (e, mods) in _appliedGameEffects)
@@ -147,10 +162,19 @@ namespace AbilitySystem
         {
             Debug.Assert(e.GameEffect.DurationStyle == DurationType.Timed);
 
-            var modifiers = from mod in e.GameEffect.Modifiers
-                            select new AttributeModifier(mod.Attribute, mod, mod.ModifierOperation, mod.Value);
+            if (e.Period == 0)
+            {
+                // If this isn't executed periodically, then the modifiers are applied over the whole duration
+                var modifiers = from mod in e.GameEffect.Modifiers
+                                select new AttributeModifier(mod.Attribute, mod, mod.ModifierOperation, mod.Value);
 
-            _appliedGameEffects.Add((e, modifiers.ToArray()));
+                _appliedGameEffects.Add((e, modifiers.ToArray()));
+            }
+            else
+            {
+                // The modifiers will be applied when the tick happens
+                _appliedGameEffects.Add((e, Array.Empty<AttributeModifier>()));
+            }
         }
 
         private void _CleanGameEffects()
@@ -177,9 +201,18 @@ namespace AbilitySystem
             */
         }
 
+        private void _ApplyTargetConsumers()
+        {
+            foreach (var c in _targetConsumers)
+            {
+                c.ConsumeEffects(_attributeSystem, this);
+            }
+        }
+
         protected void Awake()
         {
             _InstantiateAbilities();
+            _GetTargetConsumers();
         }
 
         protected void Start()
@@ -194,6 +227,11 @@ namespace AbilitySystem
 
             _TickGameEffects();
             _CleanGameEffects();
+        }
+
+        protected void LateUpdate()
+        {
+            _ApplyTargetConsumers();
         }
     }
 }

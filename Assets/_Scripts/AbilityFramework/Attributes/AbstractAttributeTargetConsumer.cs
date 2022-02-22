@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace AbilitySystem
 {
-    public abstract class AbstractEffectTargetConsumer : MonoBehaviour
+    public abstract class AbstractAttributeTargetConsumer : MonoBehaviour
     {
-        public abstract void ConsumeEffects(AbilitySystemController cont);
+        public abstract void ConsumeEffects(AttributeSystemController attrs, AbilitySystemController cont);
     }
 }
