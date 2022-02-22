@@ -6,9 +6,6 @@ using System.Linq;
 
 public class DamageAttributeTargetConsumer : AbstractAttributeTargetConsumer
 {
-    [SerializeField] private GameEffect _burnEffect;
-    [SerializeField] private float _burnPercBase;
-
     public override void ConsumeEffects(AttributeSystemController attrs, AbilitySystemController abilities)
     {
         // Get all damage values
@@ -41,13 +38,13 @@ public class DamageAttributeTargetConsumer : AbstractAttributeTargetConsumer
 
     public InstantiatedGameEffect InstantiateBurn(AbilitySystemController ability, float damageBurn)
     {
-        var burnEff = (GameEffect) _burnEffect.Clone();
+        var burnEff = (GameEffect) StandardEffectsDB.Instance.BurnEffect.Clone();
         var burnMod = new EffectModifier()
         {
             Attribute = AbilitySystemDB.Instance.DamageSimple,
             ModifierOperation = AbilitySystem.ModifierType.Add,
             EffectCurve = new AnimationCurve(),
-            Value = damageBurn * _burnPercBase
+            Value = damageBurn * StandardEffectsDB.Instance.BurnPercBase
         };
 
         burnEff.Modifiers = new[] { burnMod };
