@@ -14,6 +14,9 @@ namespace AbilitySystem
 
         [SerializeField] private List<HitboxEffect> _hitboxEffects;
 
+        [SerializeField] private AudioClip _onHitSound;
+        [SerializeField] private AudioClip _noHitSound;
+
         public override AbstractInstantiatedAbility InstantiateAbility(AbilitySystemController owner)
         {
             _startingEffects = GameEffect.LinkGameEffects(_alwaysSelfEffects);
@@ -62,9 +65,18 @@ namespace AbilitySystem
                 // Wait for delay
                 yield return new WaitForSeconds(e.Delay);
 
+                var sa = _ability as AbilityWithHitbox;
                 var desc = e.HitboxDescription;
                 var obj = Instantiate(desc.Prefab, _owner.transform);
                 var colliders = obj.GetComponents<Collider2D>();
+
+                if (_owner.AttackController != null)
+                {
+                    // TODO: Potentially make this work a better way
+                    var dir = _owner.AttackController.FixedDirection;
+                    var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                    obj.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+                }
 
                 var seenSet = new HashSet<Collider2D>();
                 var colliderFilter = new ContactFilter2D();
@@ -72,6 +84,13 @@ namespace AbilitySystem
                 colliderFilter.useTriggers = true;
 
                 float timeElapsed = 0;
+
+                // No target hit, but still play attack sound
+                if (_owner.AudioSource != null)
+                {
+                    _owner.AudioSource.clip = sa._noHitSound;
+                    _owner.AudioSource.Play();
+                }
 
                 while (timeElapsed < desc.AliveDuration)
                 {
@@ -101,6 +120,15 @@ namespace AbilitySystem
                             _owner.ApplyGameEffectToSelfNoDelay(
                                 new InstantiatedGameEffect(selfEffect, _owner, _owner));
                         }
+
+                        /*
+                        if (_owner.AudioSource != null)
+                        {
+                            _owner.AudioSource.clip = sa._onHitSound;
+                            _owner.AudioSource.Play();
+                        }
+                        */
+
                     }
                     
                     foreach (var t in targetSet)

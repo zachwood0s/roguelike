@@ -149,7 +149,7 @@ MonoBehaviour:
       Delay: 0
       Duration: 0
       Modifiers:
-      - Attribute: {fileID: 11400000, guid: 454fe90d6d26bf54ba981b2e00478c5e, type: 2}
+      - Attribute: {fileID: 11400000, guid: a4d20998aeeeb1740946e94bf9085565, type: 2}
         EffectCurve:
           serializedVersion: 2
           m_Curve: []
@@ -198,3 +198,5 @@ MonoBehaviour:
       - {fileID: 11400000, guid: 1d50d5cc49f168d44b19ee759f4fa2e8, type: 2}
       - {fileID: 11400000, guid: cc03531c2ee84d44997affe75b4bd1ca, type: 2}
       Period: 0
+  _onHitSound: {fileID: 0}
+  _noHitSound: {fileID: 8300000, guid: 65089b1dae0f2fc489ba05e67b236ceb, type: 3}

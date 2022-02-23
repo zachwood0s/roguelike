@@ -76,7 +76,7 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       ModifierOperation: 3
-      Value: 3
+      Value: 2
     GrantedTags:
     - {fileID: 11400000, guid: 2da08b95c17073745995cdb46be8d76b, type: 2}
     Period: 0
@@ -128,3 +128,5 @@ MonoBehaviour:
       GrantedTags:
       - {fileID: 11400000, guid: 1d50d5cc49f168d44b19ee759f4fa2e8, type: 2}
       Period: 0
+  _onHitSound: {fileID: 8300000, guid: b824e51e69e1a1c40ad792d2a14028d3, type: 3}
+  _noHitSound: {fileID: 8300000, guid: 3f54f0d186929f24398fbefd7fe5dfd3, type: 3}

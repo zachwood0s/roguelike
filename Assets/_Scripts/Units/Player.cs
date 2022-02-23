@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, ICharacterAttackController
 {
     [SerializeField] private AbilitySystemController _abilitySystem;
     [SerializeField] private AttributeSystemController _attributeSystem;
@@ -16,6 +16,8 @@ public class Player : MonoBehaviour
     private Vector2 _fixedDirecton;
     private Vector2 _inputVec;
     private SpriteRenderer _sprite;
+
+    public Vector2 FixedDirection => _fixedDirecton;
 
     void Start()
     {

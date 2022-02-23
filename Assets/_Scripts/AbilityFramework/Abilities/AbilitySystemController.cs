@@ -14,9 +14,13 @@ namespace AbilitySystem
         [SerializeField] private AttributeSystemController _attributeSystem;
 
         private List<AbstractAttributeTargetConsumer> _targetConsumers;
+        private List<AbstractAttributeSourceConsumer> _sourceConsumers;
         private List<AbstractInstantiatedAbility> _instantiatedAbilities = new List<AbstractInstantiatedAbility>();
         private List<(InstantiatedGameEffect inst, AttributeModifier[] modifiers)> _appliedGameEffects 
             = new List<(InstantiatedGameEffect inst, AttributeModifier[] modifiers)>();
+
+        public ICharacterAttackController AttackController { get; private set; }
+        public AudioSource AudioSource { get; private set; }
 
         public IEnumerable<GameTag> AppliedGameTags =>
             _appliedGameEffects.SelectMany(x => x.inst.GameEffect.GrantedTags);
@@ -103,8 +107,10 @@ namespace AbilitySystem
 
         private void _GetTargetConsumers()
         {
-            var comps = GetComponents<AbstractAttributeTargetConsumer>();
-            _targetConsumers = new List<AbstractAttributeTargetConsumer>(comps);
+            var targetComps = GetComponents<AbstractAttributeTargetConsumer>();
+            _targetConsumers = new List<AbstractAttributeTargetConsumer>(targetComps);
+            var sourceComps = GetComponents<AbstractAttributeSourceConsumer>();
+            _sourceConsumers = new List<AbstractAttributeSourceConsumer>(sourceComps);
         }
 
         private void _UpdateAttributeSystem()
@@ -139,8 +145,9 @@ namespace AbilitySystem
 
         private void _ApplyInstantGameEffect(InstantiatedGameEffect e)
         {
-            foreach (var mod in e.GameEffect.Modifiers)
+            foreach (var _mod in e.GameEffect.Modifiers)
             {
+                var mod = e.Source._ApplySourceConsumers(_mod);
                 var val = _attributeSystem.GetAttributeValue(mod.Attribute);
                 var newBase = mod.ModifierOperation switch
                 {
@@ -166,7 +173,8 @@ namespace AbilitySystem
             {
                 // If this isn't executed periodically, then the modifiers are applied over the whole duration
                 var modifiers = from mod in e.GameEffect.Modifiers
-                                select new AttributeModifier(mod.Attribute, mod, mod.ModifierOperation, mod.Value);
+                                let actualMod = e.Source._ApplySourceConsumers(mod)
+                                select new AttributeModifier(mod.Attribute, actualMod, actualMod.ModifierOperation, actualMod.Value);
 
                 _appliedGameEffects.Add((e, modifiers.ToArray()));
             }
@@ -209,6 +217,15 @@ namespace AbilitySystem
             }
         }
 
+        private EffectModifier _ApplySourceConsumers(EffectModifier mod)
+        {
+            foreach (var c in _sourceConsumers)
+            {
+                mod = c.CalculateActualEffectAmount(this, _attributeSystem, mod);
+            }
+            return mod;
+        }
+
         protected void Awake()
         {
             _InstantiateAbilities();
@@ -218,6 +235,8 @@ namespace AbilitySystem
         protected void Start()
         {
             _ActivateInitializationAbilities();
+            AttackController = GetComponent<ICharacterAttackController>();
+            AudioSource = GetComponent<AudioSource>();
         }
 
         protected void Update()

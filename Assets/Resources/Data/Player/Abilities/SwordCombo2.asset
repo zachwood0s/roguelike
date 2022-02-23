@@ -126,3 +126,5 @@ MonoBehaviour:
       GrantedTags:
       - {fileID: 11400000, guid: 1d50d5cc49f168d44b19ee759f4fa2e8, type: 2}
       Period: 0
+  _onHitSound: {fileID: 0}
+  _noHitSound: {fileID: 8300000, guid: 977f7ada5a27f1c40ad16a47713a44cc, type: 3}
