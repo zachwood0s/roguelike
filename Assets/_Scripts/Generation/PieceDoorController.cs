@@ -37,6 +37,15 @@ public class PieceDoorController : MonoBehaviour
             OutDirection = InDirection,
             OutPosition = InPosition
         };
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Door other)
+            {
+                return OutDirection == other.OutDirection && OutPosition == other.OutPosition;
+            }
+            return false;
+        }
     }
 
     public struct RoomBounds

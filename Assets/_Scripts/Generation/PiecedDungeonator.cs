@@ -18,7 +18,7 @@ public class PiecedDungeonator : MonoBehaviour
 
     // Rooms with doors on these sides
     private List<GameObject> _rooms;
-    private GameObject[,] _map;
+    private PlacedRoom?[,] _map;
     private List<(int, int)> _endRooms;
     private int _totalNumRooms;
 
@@ -87,13 +87,14 @@ public class PiecedDungeonator : MonoBehaviour
 
     private bool _FillCells()
     {
-        _map = new GameObject[_rows, _cols];
+        _map = new PlacedRoom?[_rows, _cols];
         _endRooms = new List<(int, int)>();
         _totalNumRooms = Mathf.CeilToInt(_numRoomsBase + UnityEngine.Random.Range(0, _numRoomsRandFactor));
 
 
         var currentCell = new Queue<PlacedRoom>();
-        var starting = (UnityEngine.Random.Range(0, _rows), UnityEngine.Random.Range(0, _cols));
+        //var starting = (UnityEngine.Random.Range(0, _rows), UnityEngine.Random.Range(0, _cols));
+        var starting = (_rows / 2, _cols / 2);
         var startingRoom = _mainRoom.GetComponent<PieceDoorController> ();
 
         var filledRooms = 0;
@@ -230,7 +231,7 @@ public class PiecedDungeonator : MonoBehaviour
         {
             for (int c = norm.MinCol; c <= norm.MaxCol; c++)
             {
-                _map[r, c] = placed.Room.gameObject;
+                _map[r, c] = placed;
             }
         }
     }
@@ -238,14 +239,125 @@ public class PiecedDungeonator : MonoBehaviour
     private bool _CanFillRoom(PlacedRoom placed)
     {
         var norm = _NormalizeCoords(placed);
+        var doorPositions = new Dictionary<Vector2Int, List<PieceDoorController.Door>>();
+        // Check area first 
         for (int r = norm.MinRow; r <= norm.MaxRow; r++)
         {
             for (int c = norm.MinCol; c <= norm.MaxCol; c++)
             {
                 if (!_CoordsInRange(r, c) || _map[r, c] != null)
+                {
+                    // Can't place along the edge or already occupied
                     return false;
+                }
+                doorPositions[new Vector2Int(r, c)] = new List<PieceDoorController.Door>();
             }
         }
+        
+        // Collect all doors in the new room
+        foreach (var d in placed.Room.Doors)
+        {
+            var doorPosition = new Vector2Int(d.OutPosition.y + norm.MinRow, d.OutPosition.x + norm.MinCol);
+            doorPositions[doorPosition].Add(d);
+        }
+
+        // Check neighbors
+        var neighbor = new HashSet<PlacedRoom>();
+        for (int r = norm.MinRow; r <= norm.MaxRow; r++)
+        {
+            var checkMax = norm.MaxCol + 1;
+            var checkMin = norm.MinCol - 1;
+
+            var hasDoorOutLeft = doorPositions[new Vector2Int(r, norm.MinCol)].Any(x => x.OutDirection == PieceDoorController.DoorDirection.Left);
+            var hasDoorOutRight = doorPositions[new Vector2Int(r, norm.MaxCol)].Any(x => x.OutDirection == PieceDoorController.DoorDirection.Right);
+
+            if (hasDoorOutLeft && !_CoordsInRange(r, checkMin))
+                // Door would lead outside the map
+                return false;
+
+            if (hasDoorOutRight && !_CoordsInRange(r, checkMax))
+                // Door would lead outside the map
+                return false;
+
+            if (_CoordsInRange(r, checkMin) && _map[r, checkMin] != null)
+            {
+                var hasDoorIn = _HasDoorAt(r, checkMin, PieceDoorController.DoorDirection.Right);
+                if (!(hasDoorIn ^ hasDoorOutLeft))
+                {
+                    // one had a door when the other didn't
+                    return false;
+                }
+            }
+            if (_CoordsInRange(r, checkMax) && _map[r, checkMax] != null)
+            {
+                var hasDoorIn = _HasDoorAt(r, checkMax, PieceDoorController.DoorDirection.Left);
+                if (!(hasDoorIn ^ hasDoorOutRight))
+                {
+                    // one had a door when the other didn't
+                    return false;
+                }
+            }
+        }
+        for (int c = norm.MinCol; c <= norm.MaxCol; c++)
+        {
+            var checkMax = norm.MaxRow + 1;
+            var checkMin = norm.MinRow - 1;
+
+            var hasDoorOutUp = doorPositions[new Vector2Int(norm.MinRow, c)].Any(x => x.OutDirection == PieceDoorController.DoorDirection.Up);
+            var hasDoorOutDown = doorPositions[new Vector2Int(norm.MaxRow, c)].Any(x => x.OutDirection == PieceDoorController.DoorDirection.Down);
+
+            if (hasDoorOutUp && !_CoordsInRange(checkMin, c))
+                // Door would lead outside the map
+                return false;
+
+            if (hasDoorOutDown && !_CoordsInRange(checkMax, c))
+                // Door would lead outside the map
+                return false;
+
+            if (_CoordsInRange(checkMin, c) && _map[checkMin, c] != null)
+            {
+                var hasDoorIn = _HasDoorAt(checkMin, c, PieceDoorController.DoorDirection.Down);
+                if (!(hasDoorIn ^ hasDoorOutUp))
+                {
+                    // one had a door when the other didn't
+                    return false;
+                }
+            }
+            if (_CoordsInRange(checkMax, c) && _map[checkMax, c] != null)
+            {
+                var hasDoorIn = _HasDoorAt(checkMax, c, PieceDoorController.DoorDirection.Up);
+                if (!(hasDoorIn ^ hasDoorOutDown))
+                {
+                    // one had a door when the other didn't
+                    return false;
+                }
+            }
+        }
+        // Allow only one neighbor
+        if (neighbor.Count > 1)
+        {
+            return false;
+        }
+
+        var str = "";
+        // Doors to see if they lead to empty space
+        foreach (var d in placed.Room.Doors)
+        {
+            if (d.Equals(placed.InDoor.Value))
+                continue;
+
+            var doorInRow = norm.MinRow + d.InPosition.y;
+            var doorInCol = norm.MinCol + d.InPosition.x;
+
+            str += $"\n- Check {doorInRow} {doorInCol} => {_map[doorInRow, doorInCol]?.Room}";
+
+            // Something is where this door would lead into
+            if (!_CoordsInRange(doorInRow, doorInCol) || _map[doorInRow, doorInCol] != null)
+            {
+                return false;
+            }
+        }
+        Debug.Log($"Checking {placed.Room} ({placed.Row} {placed.Col}): {str}");
         return true;
     }
 
@@ -259,7 +371,21 @@ public class PiecedDungeonator : MonoBehaviour
         return count;
     }
 
-    private bool _CellFilled(int row, int col) => _CoordsInRange(row, col) ? _map[row, col]: false;
+    private bool _CellFilled(int row, int col) => _CoordsInRange(row, col) ? _map[row, col].HasValue: false;
+
+
+    private bool _HasDoorAt(int row, int col, PieceDoorController.DoorDirection outDirection)
+    {
+        var room = _map[row, col];
+        foreach (var d in room.Value.Room.Doors)
+        {
+            var doorRow = room.Value.Row + d.OutPosition.y;
+            var doorCol = room.Value.Col + d.OutPosition.x;
+            if (doorRow == doorCol && d.OutDirection == outDirection)
+                return true;
+        }
+        return false;
+    }
 
     private void _PlaceRooms()
     {
@@ -269,7 +395,7 @@ public class PiecedDungeonator : MonoBehaviour
             {
                 if(_map[row, col] != null)
                 {
-                    Instantiate(_map[row, col], new Vector2(col, row) * _cellSize, Quaternion.identity);
+                    Instantiate(_map[row, col].Value.Room.gameObject, new Vector2(col, row) * _cellSize, Quaternion.identity);
                 }
             }
         }
