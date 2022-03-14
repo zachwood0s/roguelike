@@ -37,18 +37,18 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - AccuteAngleStartDot: 1
-    - AccuteDepthThreshold: 0.001
-    - Depth_Strength: 1000
+    - AccuteAngleStartDot: 0
+    - AccuteDepthThreshold: 0
+    - Depth_Strength: 0
     - Depth_Thickness: 6.1
-    - Depth_Threshold: 0.0001
-    - Depth_Tightening: 1
-    - Normals_Strength: 100
-    - Normals_Threshold: 100
-    - Normals_Tightening: 1
+    - Depth_Threshold: 0
+    - Depth_Tightening: 0
+    - Normals_Strength: 0.187
+    - Normals_Threshold: 1.22
+    - Normals_Tightening: 1.377
     - Outline_Width: 0
     - REQUIRE_DEPTH_TEXTURE: 1
-    - Thickness: 0.0005
+    - Thickness: 1
     m_Colors:
-    - Outline_Color: {r: 0.6037736, g: 0.6037736, b: 0.6037736, a: 1}
+    - Outline_Color: {r: 1, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []

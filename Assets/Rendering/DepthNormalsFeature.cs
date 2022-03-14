@@ -7,14 +7,15 @@ public class DepthNormalsFeature : ScriptableRendererFeature
 {
     class RenderPass : ScriptableRenderPass
     {
-
+        private Settings _settings;
         private Material material;
         private RenderTargetHandle destinationHandle;
         private List<ShaderTagId> shaderTags;
         private FilteringSettings filteringSettings;
 
-        public RenderPass(Material material) : base()
+        public RenderPass(Material material, Settings settings) : base()
         {
+            _settings = settings;
             this.material = material;
             // This contains a list of shader tags. The renderer will only render objects with
             // materials containing a shader with at least one tag in this list
@@ -33,7 +34,15 @@ public class DepthNormalsFeature : ScriptableRendererFeature
         // readying it for rendering
         public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
         {
-            cmd.GetTemporaryRT(destinationHandle.id, cameraTextureDescriptor, FilterMode.Point);
+            int width = cameraTextureDescriptor.width;
+            int height = cameraTextureDescriptor.height;
+            if(_settings.downsample)
+            {
+                float factor = _settings.fixedWidth / (float) cameraTextureDescriptor.width;
+                width = _settings.fixedWidth; 
+                height = (int) (cameraTextureDescriptor.height * factor);
+            }
+            cmd.GetTemporaryRT(destinationHandle.id, width, height, cameraTextureDescriptor.depthBufferBits, FilterMode.Point);
             ConfigureTarget(destinationHandle.Identifier());
             ConfigureClear(ClearFlag.All, Color.black);
         }
@@ -56,11 +65,21 @@ public class DepthNormalsFeature : ScriptableRendererFeature
 
     private RenderPass renderPass;
 
+
+    [System.Serializable]
+    public class Settings
+    {
+        public bool downsample = false;
+        public int fixedWidth = 720;
+    }
+    [SerializeField]
+    private Settings settings = new Settings();
+
     public override void Create()
     {
         // We will use the built-in renderer's depth normals texture shader
         Material material = CoreUtils.CreateEngineMaterial("Hidden/Internal-DepthNormalsTexture");
-        this.renderPass = new RenderPass(material);
+        this.renderPass = new RenderPass(material, settings);
         // Render after shadow caster, depth, etc. passes
         renderPass.renderPassEvent = RenderPassEvent.AfterRenderingPrePasses;
     }

@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 0
   settings:
+    downsample: 1
+    fixedWidth: 720
     material: {fileID: 2100000, guid: c7428b5407193d84c80c4a2b2662d539, type: 2}
     materialPassIndex: 0
-    renderEvent: 300
+    renderEvent: 500
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30,11 +32,11 @@ MonoBehaviour:
   m_Name: Custom3DRenderer_Renderer
   m_EditorClassIdentifier: 
   m_RendererFeatures:
-  - {fileID: 3545953046524838571}
   - {fileID: 518963742873423016}
   - {fileID: -7818154767057072524}
-  m_RendererFeatureMap: abc2533082c13531a80c4749c6ba3307744e8966a9558093
-  postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
+  - {fileID: 3545953046524838571}
+  m_RendererFeatureMap: a80c4749c6ba3307744e8966a9558093abc2533082c13531
+  postProcessData: {fileID: 0}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   shaders:
     blitPS: {fileID: 4800000, guid: c17132b1f77d20942aa75f8429c0f8bc, type: 3}
@@ -73,6 +75,9 @@ MonoBehaviour:
   m_Name: Depth Normal
   m_EditorClassIdentifier: 
   m_Active: 1
+  settings:
+    downsample: 0
+    fixedWidth: 720
 --- !u!114 &518963742873423016
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -86,6 +91,9 @@ MonoBehaviour:
   m_Name: Depth Normals
   m_EditorClassIdentifier: 
   m_Active: 1
+  settings:
+    downsample: 0
+    fixedWidth: 320
 --- !u!114 &3545953046524838571
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -100,6 +108,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   settings:
+    downsample: 1
+    fixedWidth: 640
     material: {fileID: 2100000, guid: 85cb84484ed411f4a8c2f2f015035613, type: 2}
     materialPassIndex: 0
     renderEvent: 500

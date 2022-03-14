@@ -21,19 +21,18 @@ public class BlitMaterialFeature : ScriptableRendererFeature
 {
     class RenderPass : ScriptableRenderPass
     {
-
-        private string profilingName;
-        private Material material;
-        private int materialPassIndex;
+        private string _profileName;
+        private Settings _settings;
         private RenderTargetIdentifier sourceID;
         private RenderTargetHandle tempTextureHandle;
+        private RenderTargetHandle tempDownsampleHandle;
 
-        public RenderPass(string profilingName, Material material, int passIndex) : base()
+        public RenderPass(string profilingName, Settings settings) : base()
         {
-            this.profilingName = profilingName;
-            this.material = material;
-            this.materialPassIndex = passIndex;
+            _profileName = profilingName;
+            _settings = settings;
             tempTextureHandle.Init("_TempBlitMaterialTexture");
+            tempDownsampleHandle.Init("_TempDownsampleMaterialTexture");
         }
 
         public void SetSource(RenderTargetIdentifier source)
@@ -43,13 +42,27 @@ public class BlitMaterialFeature : ScriptableRendererFeature
 
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
-            CommandBuffer cmd = CommandBufferPool.Get(profilingName);
+            CommandBuffer cmd = CommandBufferPool.Get(_profileName);
 
             RenderTextureDescriptor cameraTextureDesc = renderingData.cameraData.cameraTargetDescriptor;
+            FilterMode mode = FilterMode.Bilinear;
+
+            if(_settings.downsample)
+            {
+                float factor = _settings.fixedWidth / (float) cameraTextureDesc.width;
+                cameraTextureDesc.width = _settings.fixedWidth; 
+                cameraTextureDesc.height = (int) (cameraTextureDesc.height * factor);
+                mode = FilterMode.Point;
+            }
             cameraTextureDesc.depthBufferBits = 0;
 
-            cmd.GetTemporaryRT(tempTextureHandle.id, cameraTextureDesc, FilterMode.Bilinear);
-            Blit(cmd, sourceID, tempTextureHandle.Identifier(), material, materialPassIndex);
+            cmd.GetTemporaryRT(tempTextureHandle.id, cameraTextureDesc, mode);
+            // Render to a downsampled texture so the materials apply correctly.
+            // For some reason the target scaling was not being sent to the material and I was too lazy to 
+            // figure out why.
+            cmd.GetTemporaryRT(tempDownsampleHandle.id, cameraTextureDesc, mode);
+            Blit(cmd, sourceID, tempDownsampleHandle.Identifier());
+            Blit(cmd, tempDownsampleHandle.Identifier(), tempTextureHandle.Identifier(), _settings.material, _settings.materialPassIndex);
             Blit(cmd, tempTextureHandle.Identifier(), sourceID);
 
             context.ExecuteCommandBuffer(cmd);
@@ -65,6 +78,8 @@ public class BlitMaterialFeature : ScriptableRendererFeature
     [System.Serializable]
     public class Settings
     {
+        public bool downsample = false;
+        public int fixedWidth = 720;
         public Material material;
         public int materialPassIndex = -1; // -1 means render all passes
         public RenderPassEvent renderEvent = RenderPassEvent.AfterRenderingOpaques;
@@ -82,7 +97,7 @@ public class BlitMaterialFeature : ScriptableRendererFeature
 
     public override void Create()
     {
-        this.renderPass = new RenderPass(name, settings.material, settings.materialPassIndex);
+        this.renderPass = new RenderPass(name, settings);
         renderPass.renderPassEvent = settings.renderEvent;
     }
 
