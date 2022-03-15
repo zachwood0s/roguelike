@@ -7,6 +7,7 @@
 #include "DecodeDepthNormals.hlsl"
 
 TEXTURE2D(_DepthNormalsTexture); SAMPLER(sampler_DepthNormalsTexture);
+TEXTURE2D(_NormalsTexture); SAMPLER(sampler_NormalsTexture);
 
 // The sobel effect runs by sampling the texture around a point to see
 // if there are any large changes. Each sample is multiplied by a convolution
@@ -28,6 +29,14 @@ static float2 sobelSamplePoints[9] = {
     float2(-1, 0), float2(0, 0), float2(1, 0),
     float2(-1, -1), float2(0, -1), float2(1, -1),
 };
+
+/*
+static float2 sobelSamplePoints[4] = {
+    float2(0, 1), 
+    float2(-1, 0), float2(1, 0),
+    float2(0, -1),
+};
+*/
 
 
 // Weights for the x component
@@ -97,6 +106,15 @@ void GetDepthAndNormal(float2 uv, out float depth, out float3 normal) {
     DecodeDepthNormal(coded, depth, normal);
 }
 
+float3 GetNormal(float2 uv) {
+    float3 normal;
+    float depth;
+    float4 coded = SAMPLE_TEXTURE2D(_NormalsTexture, sampler_NormalsTexture, uv);
+    DecodeDepthNormal(coded, depth, normal);
+    return normal;
+}
+
+
 // A wrapper around the above function for use in a custom function node
 void CalculateDepthNormal_float(float2 UV, out float Depth, out float3 Normal) {
     GetDepthAndNormal(UV, Depth, Normal);
@@ -124,50 +142,276 @@ void NeighborNormalEdgeIndicator(float2 UV, float depth, float3 normal, out floa
     
 }
 
+float3 Sobel(float2 UV, float Thickness)
+{
+    float2 normalX = 0;
+    float2 normalY = 0;
+    float2 normalZ = 0;
+    [unroll] for (int i = 0; i < 9; i++)
+    {
+        float newDepth = SHADERGRAPH_SAMPLE_SCENE_DEPTH(UV + sobelSamplePoints[i] * _MainTex_TexelSize.xy * Thickness);
+		float3 normalIndicator = GetNormal(UV + sobelSamplePoints[i] * _MainTex_TexelSize.xy * Thickness);
+        float2 kernel = float2(sobelXMatrix[i], sobelYMatrix[i]);
+
+        normalX += normalIndicator.x * kernel;
+        normalY += normalIndicator.y * kernel;
+        normalZ += normalIndicator.z * kernel;
+    }
+    float3 Out;
+	Out.x = length(normalX);
+	Out.y = length(normalY);
+	Out.z = length(normalZ);
+    return Out;
+}
+
 // This function runs the sobel algorithm over the opaque texture
-void NormalsSobel_float(float2 UV, float Thickness, float normalThreshold, float normalTighten, out float Out, out float NormalDir) {
-	float depth;
+void NormalsSobel_float(float2 UV, float Thickness, float normalThreshold, float normalTighten, out float3 Out, out float NormalDir) {
     float3 normalEdgeBias = float3(1, 1, 1);
     float2 normalX = 0;
     float2 normalY = 0;
     float2 normalZ = 0;
     float3 ridge = 0;
-    float3 normal;
-	GetDepthAndNormal(UV, depth, normal);
+	float depth = SHADERGRAPH_SAMPLE_SCENE_DEPTH(UV);
+    float normal = GetNormal(UV);
 
     float indicator = 0.0;
 
     [unroll] for (int i = 0; i < 9; i++)
     {
-		float3 normalIndicator;
+        float newDepth = SHADERGRAPH_SAMPLE_SCENE_DEPTH(UV + sobelSamplePoints[i] * _MainTex_TexelSize.xy * Thickness);
+		float3 normalIndicator = GetNormal(UV + sobelSamplePoints[i] * _MainTex_TexelSize.xy * Thickness);
+        /*
 		float depthIndicator;
 		GetDepthAndNormal(UV + sobelSamplePoints[i] * _MainTex_TexelSize.xy * Thickness, depthIndicator, normalIndicator);
-		float normalDiff = dot(normal - normalIndicator, normalEdgeBias);
-        float weight = clamp(smoothstep(-normalTighten, normalTighten, normalDiff), 0.0, 1.0);
-        //weight = 0;
+*/
+		//float normalDiff = dot(normal - normalIndicator, normalEdgeBias);
+        //float weight = clamp(smoothstep(-normalTighten, normalTighten, normalDiff), 0.0, 1.0);
+
+        // Only the shallower pixel should detect the normal edge.
+        //float depthIndicator = clamp(sign((newDepth - depth) * .25 + .0025), 0.0, 1.0);
+
+        //float weight = 1;
         //weight *= step(0, dot(float3(1, 1, 1), cross(normal, normalIndicator)));
        // weight = clamp(weight, 0.0, 1.0);
-        //weight = 1;
         float2 kernel = float2(sobelXMatrix[i], sobelYMatrix[i]);
-        normalX += normalIndicator.x * kernel * weight;
-        normalY += normalIndicator.y * kernel * weight;
-        normalZ += normalIndicator.z * kernel * weight;
+
+        normalX += normalIndicator.x * kernel;
+        normalY += normalIndicator.y * kernel;
+        normalZ += normalIndicator.z * kernel;
+        //normalX += (1.0 - dot(normal, normalIndicator)) * depthIndicator * weight;
     }
-    float3 dx = ddx(normal);
-    float3 dy = ddy(normal);
-    float3 xneg = normal - dx;
-    float3 xpos = normal + dx;
-    float3 yneg = normal - dy;
-    float3 ypos = normal + dy;
-    float curvature = (cross(xneg, xpos).y - cross(yneg, ypos).x) * 4.0 / depth;
 
-    // Won't be able to strictly use this as a mask. will cause dotted lines then, will need some sort of threshold
+    /*
+    float3 xneg = GetNormal(UV + float2(1, 0) * _MainTex_TexelSize.xy * Thickness);
+    float3 xpos = GetNormal(UV + float2(-1, 0) * _MainTex_TexelSize.xy * Thickness);
+	float3 yneg = GetNormal(UV + float2(0, -1) * _MainTex_TexelSize.xy * Thickness);
+	float3 ypos = GetNormal(UV + float2(0, 1) * _MainTex_TexelSize.xy * Thickness);
+    float keep = dot(normal - xneg, normalEdgeBias);
+    keep = min(keep, dot(normal - xpos, normalEdgeBias));
+    keep = min(keep, dot(normal - yneg, normalEdgeBias));
+    keep = min(keep, dot(normal - ypos, normalEdgeBias));
+
+    float curvature = (cross(xneg, xpos).y - cross(yneg, ypos).x) * 4 / depth;
     NormalDir = curvature;
-    indicator = max(length(normalX), max(length(normalY), length(normalZ)));
-	Out = step(normalThreshold + .1, indicator);
+*/
+    NormalDir = 1;
 
+    indicator = max(length(normalX), max(length(normalY), length(normalZ)));
+	Out.x = length(normalX);
+	Out.y = length(normalY);
+	Out.z = length(normalZ);
 }
 
+float brightness(float3 color)
+{
+    return color.r + color.g + color.b;
+}
+
+static float3x3 X_COMPONENT_MATRIX = float3x3(
+    1., 0., -1.,
+    2., 0., -2.,
+    1., 0., -1.
+);
+static float3x3 Y_COMPONENT_MATRIX = float3x3(
+    1., 2., 1.,
+    0., 0., 0.,
+    -1., -2., -1.
+);
+
+float2 rotate2D(float2 v, float rad) {
+    float s = sin(rad);
+    float c = cos(rad);
+    float2x2 rotMatrix = float2x2(c, s, -s, c);
+    return mul(rotMatrix, v);
+}
+float convoluteMatrices(float3x3 A, float3x3 B) {
+    return dot(A[0], B[0]) + dot(A[1], B[1]) + dot(A[2], B[2]);
+}
+
+float4 blur(float2 uv, float2 resolution, float2 direction) {
+    float4 color = 0;
+    float2 off1 = float2(1.3333333333333333, 1.333333333333333) * direction;
+    color += SAMPLE_TEXTURE2D(_NormalsTexture, sampler_NormalsTexture, uv) * 0.29411764705882354;
+    color += SAMPLE_TEXTURE2D(_NormalsTexture, sampler_NormalsTexture, uv + (off1 * resolution)) * 0.35294117647058826;
+    color += SAMPLE_TEXTURE2D(_NormalsTexture, sampler_NormalsTexture, uv - (off1 * resolution)) * 0.35294117647058826;
+    return color;
+}
+
+float3 getBlurredTextureColor(
+    float2 textureCoord,
+    float2 resolution
+) {
+    //return saturate(GetNormal(textureCoord));
+    return blur(
+        textureCoord,
+        resolution,
+        normalize(textureCoord - float2(0.5, 0.5))).xyz;
+}
+float3 getTextureIntensity(
+    float2 textureCoord,
+    float2 resolution
+) {
+    //float3 color = getBlurredTextureColor(textureCoord, resolution);
+    return saturate(GetNormal(textureCoord);
+    //return pow(length(clamp(color, 0, 1)), 2.) / 3.;
+}
+
+float2x3 getTextureIntensityGradient(
+    float2 textureCoord,
+    float2 resolution
+) {
+    float3x3 imgMatX = 0;
+    float3x3 imgMatY = 0;
+    float3x3 imgMatZ = 0;
+
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            float2 ds = -resolution + float2(i, j) * resolution; 
+            float3 color = getTextureIntensity(textureCoord + ds, resolution);
+            imgMatX[i][j] = color.x;
+            imgMatY[i][j] = color.y;
+            imgMatZ[i][j] = color.z;
+        }
+    }
+
+    float gradXX = convoluteMatrices(X_COMPONENT_MATRIX, imgMatX);
+    float gradXY = convoluteMatrices(Y_COMPONENT_MATRIX, imgMatX);
+
+    float gradYX = convoluteMatrices(X_COMPONENT_MATRIX, imgMatY);
+    float gradYY = convoluteMatrices(Y_COMPONENT_MATRIX, imgMatY);
+
+    float gradZX = convoluteMatrices(X_COMPONENT_MATRIX, imgMatZ);
+    float gradZY = convoluteMatrices(Y_COMPONENT_MATRIX, imgMatZ);
+
+    return float2x3(gradXX, gradXY, 
+                    gradYX, gradYY,
+                    gradZX, gradZY);
+}
+
+
+float2 round2DVectorAngle(float2 v) {
+    float len = length(v);
+    float2 n = normalize(v);
+    float maximum = -1.;
+    float bestAngle;
+    for (int i = 0; i < 8; i++) {
+        float theta = (float(i) * 2. * PI) / 8.;
+        float2 u = rotate2D(float2(1., 0.), theta);
+        float scalarProduct = dot(u, n);
+        if (scalarProduct > maximum) {
+            bestAngle = theta;
+            maximum = scalarProduct;
+        }
+    }
+    return len * rotate2D(float2(1., 0.), bestAngle);
+}
+
+float2 getSuppressedTextureIntensityGradient(float2 UV)
+{
+    float2 gradient = getTextureIntensityGradient(UV, _MainTex_TexelSize.xy).xy;
+    gradient = round2DVectorAngle(gradient);
+    float2 gradientStep = normalize(gradient) * _MainTex_TexelSize.xy;
+    float gradientLength = length(gradient);
+
+    float2 gradientPlusStep = getTextureIntensityGradient(UV + gradientStep, _MainTex_TexelSize.xy);
+    if (length(gradientPlusStep) >= gradientLength) return 0;
+
+    float2 gradientMinusStep = getTextureIntensityGradient(UV - gradientStep, _MainTex_TexelSize.xy);
+    if (length(gradientMinusStep) >= gradientLength) return 0;
+
+    return gradient;
+}
+
+float applyDoubleThreshold(
+    float2 gradient,
+    float weakThreshold,
+    float strongThreshold
+) {
+    float gradientLength = length(gradient);
+    if (gradientLength < weakThreshold) return 0.;
+    if (gradientLength < strongThreshold) return .5;
+    return 1.;
+}
+
+float applyHysteresis(
+    float2 textureCoord,
+    float weakThreshold,
+    float strongThreshold
+) {
+    float dx = _MainTex_TexelSize.x;
+    float dy = _MainTex_TexelSize.y;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            float2 ds = -_MainTex_TexelSize.xy + float2(i, j) * _MainTex_TexelSize.xy;
+            float2 gradient = getSuppressedTextureIntensityGradient(textureCoord + ds);
+            float edge = applyDoubleThreshold(gradient, weakThreshold, strongThreshold);
+            if (edge == 1.) return 1.;
+        }
+    }
+    return 0.;
+}
+
+void SupressSobel_float(float2 UV, float weakThreshold, float strongThreshold, out float2 Out) 
+{
+    float2 gradient = getSuppressedTextureIntensityGradient(UV);
+    float edge = applyDoubleThreshold(gradient, weakThreshold, strongThreshold);
+    /*
+    if (edge == .5) {
+        edge = applyHysteresis(UV, weakThreshold, strongThreshold);
+    }
+    */
+    Out = saturate(getTextureIntensity(UV, _MainTex_TexelSize.xy));
+    //Out = length(gradient);
+    //Out = gradient;
+    //Out = getTextureIntensityGradient(UV, _MainTex_TexelSize.xy).xy;
+
+
+    /*
+    float2 gradient = getTextureIntensityGradient(UV, _MainTex_TexelSize.xy).xy;
+    gradient = round2DVectorAngle(gradient);
+    float2 gradientStep = normalize(gradient) * _MainTex_TexelSize.xy;
+    float gradientLength = length(gradient);
+
+    Out = gradient;
+
+    float gradientPlusStep = getTextureIntensityGradient(UV + gradientStep, _MainTex_TexelSize.xy);
+    if (length(gradientPlusStep) >= gradientLength) Out = 0;
+
+    float gradientMinusStep = getTextureIntensityGradient(UV - gradientStep, _MainTex_TexelSize.xy);
+    if (length(gradientMinusStep) >= gradientLength) Out = 0;
+    /*
+    float gradientPlusStep = getTextureIntensityGradient(
+        textureSampler, textureCoord + gradientStep, resolution);
+    if (length(gradientPlusStep) >= gradientLength) return vec2(0.);
+
+    float2 gradientMinusStep = getTextureIntensityGradient(
+        textureSampler, textureCoord - gradientStep, resolution);
+    if (length(gradientMinusStep) >= gradientLength) return vec2(0.);
+    */
+    //Out = clamp(brightness(sobel), 0, 1);
+}
+
+/*
 void DepthAndNormalsSobel_float(float2 UV, float Thickness, out float OutDepth, out float OutNormal) {
     // This function calculates the normal and depth sobels at the same time
     // using the depth encoded into the depth normals texture
@@ -175,7 +419,7 @@ void DepthAndNormalsSobel_float(float2 UV, float Thickness, out float OutDepth, 
     float sobelDepth = 0;
     // We can unroll this loop to make it more efficient
     // The compiler is also smart enough to remove the i=4 iteration, which is always zero
-    [unroll] for (int i = 0; i < 9; i++) {
+    [unroll] for (int i = 0; i < 4; i++) {
         float depth;
         float3 normal;
         float normalIndicator;
@@ -196,4 +440,5 @@ void DepthAndNormalsSobel_float(float2 UV, float Thickness, out float OutDepth, 
 
 
 }
+*/
 #endif

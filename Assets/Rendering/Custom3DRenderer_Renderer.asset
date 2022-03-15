@@ -14,9 +14,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 0
   settings:
-    downsample: 1
+    textureName: _TempBlitMaterialTexture
+    downsample: 0
     fixedWidth: 720
     material: {fileID: 2100000, guid: c7428b5407193d84c80c4a2b2662d539, type: 2}
+    materialPassIndex: 0
+    renderEvent: 500
+--- !u!114 &-7001308560629005373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 585d6437b0cd6bf4c9a886a3759dcd35, type: 3}
+  m_Name: World Normals
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  settings:
+    textureName: _TempBlitMaterialTexture
+    downsample: 0
+    fixedWidth: 720
+    material: {fileID: 2100000, guid: 9082bdbaf4803644f8abc92e4a48ad8f, type: 2}
     materialPassIndex: 0
     renderEvent: 500
 --- !u!114 &11400000
@@ -35,7 +56,8 @@ MonoBehaviour:
   - {fileID: 518963742873423016}
   - {fileID: -7818154767057072524}
   - {fileID: 3545953046524838571}
-  m_RendererFeatureMap: a80c4749c6ba3307744e8966a9558093abc2533082c13531
+  - {fileID: -7001308560629005373}
+  m_RendererFeatureMap: a80c4749c6ba3307744e8966a9558093abc2533082c13531c383ce68f55ad69e
   postProcessData: {fileID: 0}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   shaders:
@@ -93,7 +115,7 @@ MonoBehaviour:
   m_Active: 1
   settings:
     downsample: 0
-    fixedWidth: 320
+    fixedWidth: 640
 --- !u!114 &3545953046524838571
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -106,8 +128,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 585d6437b0cd6bf4c9a886a3759dcd35, type: 3}
   m_Name: Outline
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
+    textureName: _TempBlitMaterialTexture
     downsample: 1
     fixedWidth: 640
     material: {fileID: 2100000, guid: 85cb84484ed411f4a8c2f2f015035613, type: 2}

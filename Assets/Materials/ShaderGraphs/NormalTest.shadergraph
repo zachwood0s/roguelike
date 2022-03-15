@@ -214,7 +214,7 @@
     "m_DefaultRefNameVersion": 1,
     "m_RefNameGeneratedByDisplayName": "DepthNormals",
     "m_DefaultReferenceName": "DepthNormals",
-    "m_OverrideReferenceName": "_DepthNormalsTexture",
+    "m_OverrideReferenceName": "_NormalsTexture",
     "m_GeneratePropertyBlock": false,
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,

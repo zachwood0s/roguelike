@@ -31,7 +31,7 @@ public class BlitMaterialFeature : ScriptableRendererFeature
         {
             _profileName = profilingName;
             _settings = settings;
-            tempTextureHandle.Init("_TempBlitMaterialTexture");
+            tempTextureHandle.Init(settings.textureName);
             tempDownsampleHandle.Init("_TempDownsampleMaterialTexture");
         }
 
@@ -78,6 +78,7 @@ public class BlitMaterialFeature : ScriptableRendererFeature
     [System.Serializable]
     public class Settings
     {
+        public string textureName = "_TempBlitMaterialTexture";
         public bool downsample = false;
         public int fixedWidth = 720;
         public Material material;
