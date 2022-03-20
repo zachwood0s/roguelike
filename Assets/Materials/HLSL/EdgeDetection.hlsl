@@ -1,8 +1,6 @@
 #ifndef EDGE_DETECTION_INCLUDED
 #define EDGE_DETECTION_INCLUDED
 
-#pragma enable_d3d11_debug_symbols
-
 
 #include "DecodeDepthNormals.hlsl"
 
@@ -201,7 +199,6 @@ void NormalsSobel_float(float2 UV, float Thickness, float normalThreshold, float
         //normalX += (1.0 - dot(normal, normalIndicator)) * depthIndicator * weight;
     }
 
-    /*
     float3 xneg = GetNormal(UV + float2(1, 0) * _MainTex_TexelSize.xy * Thickness);
     float3 xpos = GetNormal(UV + float2(-1, 0) * _MainTex_TexelSize.xy * Thickness);
 	float3 yneg = GetNormal(UV + float2(0, -1) * _MainTex_TexelSize.xy * Thickness);
@@ -212,9 +209,7 @@ void NormalsSobel_float(float2 UV, float Thickness, float normalThreshold, float
     keep = min(keep, dot(normal - ypos, normalEdgeBias));
 
     float curvature = (cross(xneg, xpos).y - cross(yneg, ypos).x) * 4 / depth;
-    NormalDir = curvature;
-*/
-    NormalDir = 1;
+    NormalDir = -curvature;
 
     indicator = max(length(normalX), max(length(normalY), length(normalZ)));
 	Out.x = length(normalX);
@@ -271,12 +266,32 @@ float3 getTextureIntensity(
     float2 textureCoord,
     float2 resolution
 ) {
-    //float3 color = getBlurredTextureColor(textureCoord, resolution);
-    return saturate(GetNormal(textureCoord);
+    float3 color = getBlurredTextureColor(textureCoord, resolution);
+    //float3 color = GetNormal(textureCoord);
+    return color;//GetNormal(textureCoord);
     //return pow(length(clamp(color, 0, 1)), 2.) / 3.;
 }
 
-float2x3 getTextureIntensityGradient(
+float2 getTextureIntensityGradientChannel(float2 textureCoord, float2 resolution, int channel)
+{
+    float3x3 imgMatX = 0;
+
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            float2 ds = -resolution + float2(i, j) * resolution; 
+            float3 color = getTextureIntensity(textureCoord + ds, resolution);
+            imgMatX[i][j] = color[channel];
+        }
+    }
+
+    float gradXX = convoluteMatrices(X_COMPONENT_MATRIX, imgMatX);
+    float gradXY = convoluteMatrices(Y_COMPONENT_MATRIX, imgMatX);
+
+    return float2(gradXX, gradXY);
+
+}
+
+float2 getTextureIntensityGradient(
     float2 textureCoord,
     float2 resolution
 ) {
@@ -303,9 +318,20 @@ float2x3 getTextureIntensityGradient(
     float gradZX = convoluteMatrices(X_COMPONENT_MATRIX, imgMatZ);
     float gradZY = convoluteMatrices(Y_COMPONENT_MATRIX, imgMatZ);
 
-    return float2x3(gradXX, gradXY, 
+    float lenX = length(float2(gradXX, gradXY));
+    float lenY = length(float2(gradYX, gradYY));
+    float lenZ = length(float2(gradZX, gradZY));
+
+    if (lenX > lenY && lenX > lenZ)
+        return float2(gradXX, gradXY);
+    if (lenY > lenZ)
+        return float2(gradYX, gradYY);
+    return float2(gradZX, gradZY);
+    /*
+    return float3x2(gradXX, gradXY, 
                     gradYX, gradYY,
                     gradZX, gradZY);
+                    */
 }
 
 
@@ -326,10 +352,27 @@ float2 round2DVectorAngle(float2 v) {
     return len * rotate2D(float2(1., 0.), bestAngle);
 }
 
+float2 suppressGradiant(float2 gradient, float2 plusStep, float2 minusStep)
+{
+    gradient = round2DVectorAngle(gradient);
+    float gradientLength = length(gradient);
+    if (length(plusStep) >= gradientLength) return 0;
+    if (length(minusStep) >= gradientLength) return 0;
+    return gradient;
+}
+
 float2 getSuppressedTextureIntensityGradient(float2 UV)
 {
-    float2 gradient = getTextureIntensityGradient(UV, _MainTex_TexelSize.xy).xy;
-    gradient = round2DVectorAngle(gradient);
+    float2 gradient = getTextureIntensityGradient(UV, _MainTex_TexelSize.xy);
+    gradient.xy = gradient.yx;
+
+    float2 gradientStep = normalize(gradient) * _MainTex_TexelSize.xy;
+
+    float2 gradientOut = suppressGradiant(gradient,
+        getTextureIntensityGradient(UV + gradientStep, _MainTex_TexelSize.xy),
+        getTextureIntensityGradient(UV - gradientStep, _MainTex_TexelSize.xy));
+    /*
+
     float2 gradientStep = normalize(gradient) * _MainTex_TexelSize.xy;
     float gradientLength = length(gradient);
 
@@ -338,8 +381,9 @@ float2 getSuppressedTextureIntensityGradient(float2 UV)
 
     float2 gradientMinusStep = getTextureIntensityGradient(UV - gradientStep, _MainTex_TexelSize.xy);
     if (length(gradientMinusStep) >= gradientLength) return 0;
+    */
 
-    return gradient;
+    return gradientOut;
 }
 
 float applyDoubleThreshold(
@@ -371,19 +415,22 @@ float applyHysteresis(
     return 0.;
 }
 
-void SupressSobel_float(float2 UV, float weakThreshold, float strongThreshold, out float2 Out) 
+void SupressSobel_float(float2 UV, float weakThreshold, float strongThreshold, out float3 Out) 
 {
     float2 gradient = getSuppressedTextureIntensityGradient(UV);
+    //float2 gradient = getTextureIntensityGradient(UV, _MainTex_TexelSize.xy);
     float edge = applyDoubleThreshold(gradient, weakThreshold, strongThreshold);
-    /*
     if (edge == .5) {
         edge = applyHysteresis(UV, weakThreshold, strongThreshold);
     }
-    */
-    Out = saturate(getTextureIntensity(UV, _MainTex_TexelSize.xy));
+    //Out = saturate(getTextureIntensity(UV, _MainTex_TexelSize.xy));
+    //Out = getTextureIntensity(UV, _MainTex_TexelSize);
+    //Out.xy = abs(round2DVectorAngle(gradient));
+    //Out.z = 0;
+    //Out = saturate(Out);
     //Out = length(gradient);
-    //Out = gradient;
     //Out = getTextureIntensityGradient(UV, _MainTex_TexelSize.xy).xy;
+    Out = edge;
 
 
     /*

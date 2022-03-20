@@ -105,7 +105,7 @@
     },
     "m_PreviewData": {
         "serializedMesh": {
-            "m_SerializedMesh": "{\"mesh\":{\"fileID\":10205,\"guid\":\"0000000000000000e000000000000000\",\"type\":0}}",
+            "m_SerializedMesh": "{\"mesh\":{\"fileID\":-5495902117074765545,\"guid\":\"720e5ac508de05f4c924062800d6e6ff\",\"type\":3}}",
             "m_Guid": ""
         }
     },
@@ -134,10 +134,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -419.0,
-            "y": -153.0000457763672,
+            "x": -461.0,
+            "y": -179.0,
             "width": 208.0,
-            "height": 313.9999694824219
+            "height": 316.0
         }
     },
     "m_Slots": [
@@ -152,7 +152,7 @@
     "m_CustomColors": {
         "m_SerializableColors": []
     },
-    "m_Space": 0
+    "m_Space": 1
 }
 
 {
